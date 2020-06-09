@@ -143,34 +143,21 @@ print('mae 는', mae)
 '''
 y_predict = model.predict(x_pred)
 print(y_predict)
-'''
-y_predict = pd.DataFrame(y_predict) # 판다스로 변환해서,csv로 저장
+
+# 판다스로 변환해서,csv로 저장
 print(type(y_predict))
 # print(x_predict)
 
 
-x_predict = pd.DataFrame({
+submissions = pd.DataFrame({
   'id' : np.array(range(2800, 3500)),
   'X': y_predict[:,0],
   'Y': y_predict[:, 1],
   'M': y_predict[:, 2],
   'V':y_predict[:, 3]
 })
-# x_predict.to_csv('./dacon/sample_submission.csv', index = False )
 
-
-y_pred = model.predict(x_pred)
-print(y_pred)
-
-submissions = pd.DataFrame({
-    "id": range(2800,3500),
-    "X": y_pred[:,0],
-    "Y": y_pred[:,1],
-    "M": y_pred[:,2],
-    "V": y_pred[:,3]
-})
-
-submissions.to_csv('./dacon/comp2/comp2_sub.csv', index = False)
+submissions.to_csv('./dacon/comp3/comp3_sub.csv', index = False)
 
 
 
@@ -178,4 +165,3 @@ submissions.to_csv('./dacon/comp2/comp2_sub.csv', index = False)
 # 서브밋파일 만든다.
 # .to_csv(경로)
 # 제출
-'''
