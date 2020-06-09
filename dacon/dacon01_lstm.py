@@ -65,8 +65,7 @@ print(type(x))          # <class 'numpy.ndarray'>
 print(type(y))
 print(type(x_pred))
 
-x = x[0:, 1:]
-print(x)
+
 
 
 # 데이터 분리
@@ -81,9 +80,9 @@ scaler = StandardScaler()
 
 scaler.fit(x)
 x = scaler.transform(x)
-# x_pred = scaler.transform(x_pred)
+x_pred = scaler.transform(x_pred)
 
-x = x.reshape(2800, -1, 4)
+x = x.reshape(2800, -1, 5)
 x_pred = x_pred.reshape(-1, 375, 5)
 
 print(x.shape)    # (2800, 375, 4)   
@@ -115,7 +114,7 @@ print(x_test.shape)    # (262500, 5)
 
 model = Sequential()
 
-model.add(LSTM(128, input_shape= (375, 4),
+model.add(LSTM(128, input_shape= (375, 5),
                activation = lr))
 model.add(Dropout(rate = 0.2))
 model.add(Dense(64, activation = lr))
