@@ -40,6 +40,7 @@ print("====================================")
 # Dense모델 구성
 # 모델을 여러번 쓸 수 있다
 # gridsearch에 넣기위한 모델(모델에 대한 명시 : 함수로 만듦)
+
 def build_model(drop=0.5, optimizer='adam'):
     inputs = Input(shape=(28*28, ), name='input')
     x = Dense(512, activation='relu', name='hidden1')(inputs)
@@ -57,7 +58,7 @@ def build_model(drop=0.5, optimizer='adam'):
 
 def create_hyperparameters():
     batches = [10, 20, 30, 40, 50]  # 5번
-    optimizers = ['rmsprop', 'adam', 'adadelta']  # 3번
+    optimizers = ['rmsprop', 'adam', 'adadelta']  # 3번 (75*3)
     dropout = np.linspace(0.1, 0.5, 5)  # 0.1~ 05까지 총 5번
     return{"batch_size": batches, "optimizer":optimizers, "drop": dropout}
 
@@ -71,7 +72,7 @@ hyperparameters=create_hyperparameters()
 
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 
-search = RandomizedSearchCV(model,hyperparameters, cv = 3)  # cv = 3번돌려라(75*3=225번)  총 225번 돌아간다.
+search = RandomizedSearchCV(model,hyperparameters, cv = 3)  # cv = 3번돌려라  (75*3=255)
 # search = RandomizedSearchCV(model,hyperparameters, cv=3, n_jobs = -1) 
 # search = RandomizedSearchCV(model,hyperparameters, cv=3, n_jobs = 5)  
 # search = RandomizedSearchCV(model,hyperparameters, cv=3, n_jobs = 7)  
