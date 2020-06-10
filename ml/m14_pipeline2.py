@@ -1,4 +1,6 @@
 # RandomiziedSearchCV
+# 사이킷런 버전 : 22.1로 해야한다.
+
 import pandas as pd
 import numpy as np
 from sklearn.datasets import load_iris
@@ -18,17 +20,34 @@ x_train, x_test, y_train, y_test = train_test_split(x, y, train_size = 0.8,
 
 
 # grid / random search에서 사용할 매개 변수
+# 리스트 형대 - 키 : 벨류 딕셔너리
+# parameters = [
+#     {'svm__C':[1, 10, 100, 1000], 'svm__kernel':['linear']},
+#     {'svm__C':[1, 10, 100, 1000], 'svm__kernel':['rbf'], 'svm__gamma':[0.001, 0.0001]},
+#     {'svm__C':[1, 10, 100, 1000], 'svm__kernel':['linear'], 'svm__gamma':[0.001, 0.0001]}
+# ]
+# Pipeline 엮게될때, 파라미터 앞에 : '이름(소문자)__' 명시해야 한다.
+#                                       모델명__파라미터
+
+# parameters = [
+#     {'C':[1, 10, 100, 1000], 'kernel':['linear']},
+#     {'C':[1, 10, 100, 1000], 'kernel':['rbf'], 'gamma':[0.001, 0.0001]},
+#     {'C':[1, 10, 100, 1000], 'kernel':['linear'], 'gamma':[0.001, 0.0001]}
+# ]
+
 parameters = [
-    {'svm__C':[1, 10, 100, 1000], 'svm__kernel':['linear']},
-    {'svm__C':[1, 10, 100, 1000], 'svm__kernel':['rbf'], 'svm__gamma':[0.001, 0.0001]},
-    {'svm__C':[1, 10, 100, 1000], 'svm__kernel':['linear'], 'svm__gamma':[0.001, 0.0001]}
+    {'svc__C':[1, 10, 100, 1000], 'svc__kernel':['linear']},
+    {'svc__C':[1, 10, 100, 1000], 'svc__kernel':['rbf'], 'svc__gamma':[0.001, 0.0001]},
+    {'svc__C':[1, 10, 100, 1000], 'svc__kernel':['linear'], 'svc__gamma':[0.001, 0.0001]}
 ]
 
 #2. 모델
 from sklearn.pipeline import Pipeline, make_pipeline
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
-pipe = Pipeline([("scaler", MinMaxScaler()), ('svm', SVC())])    
-# pipe = make_pipeline(MinMaxScaler(), SVC())
+# pipe = Pipeline([("scaler", MinMaxScaler()), ('svm', SVC())])    
+# pipe = Pipeline([("scaler", MinMaxScaler()), ('svc', SVC())])    
+pipe = make_pipeline(MinMaxScaler(), SVC())
+#                      전처리,     모델 명시
 
 model = RandomizedSearchCV(pipe, parameters , cv = 5)
 
@@ -38,8 +57,12 @@ model.fit(x_train, y_train)
 
 #4. 평가,예측 (evaluate, predict)
 acc = model.score(x_test, y_test)
-
+print("========================")
 print('최적의 매개변수 = ', model.best_estimator_)
+print("========================")
+print('최적의 매개변수 = ', model.best_params_)
+print("========================")
+
 print('acc : ', acc)
 
 import sklearn as sk
