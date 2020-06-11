@@ -1,3 +1,4 @@
+
 # 회귀모델이다.
 
 import numpy as np
@@ -9,9 +10,9 @@ from sklearn.decomposition import PCA
 from keras.callbacks import EarlyStopping
 es = EarlyStopping(monitor = 'val_loss', mode = 'min', patience = 10)
 
-train = pd.read_csv('./data/dacon/comp1/train.csv', header=0, index_col=0)
-test = pd.read_csv('./data/dacon/comp1/test.csv', header=0, index_col=0)
-submission = pd.read_csv('./data/dacon/comp1/sample_submission.csv', header=0, index_col=0)
+train = pd.read_csv('./dacon/comp1/train.csv', header=0, index_col=0)
+test = pd.read_csv('./dacon/comp1/test.csv', header=0, index_col=0)
+submission = pd.read_csv('./dacon/comp1/sample_submission.csv', header=0, index_col=0)
 
 print('train.shape : ', train.shape)  # (10000, 75) : x_train, x_test
 print('test.shape : ', test.shape)   # (10000, 71) : x_predict
@@ -27,7 +28,7 @@ print(test.isnull().sum())
 
 ##########################################
 
-# train = train.fillna(method='bfill') 
+train = train.fillna(method='bfill') 
 test = test.fillna(method='bfill') 
 print(test.isnull().sum())
 print("=" * 40)
@@ -132,25 +133,34 @@ print('mae 는', mae)
 test = test.values  # 넘파이 형식으로 변환
 y_predict = model.predict(test)
 print(y_predict)
-
+'''
 y_predict = pd.DataFrame(y_predict) # 판다스로 변환해서,csv로 저장
 print(type(y_predict))
 # print(x_predict)
+'''
 
+# x_predict = pd.DataFrame({
+#   'id' : np.array(range(10000, 20000)),
+#   'hhb': y_predict[:,0],
+#   'hbo2': y_predict[:, 1],
+#   'ca': y_predict[:, 2],
+#   'na':y_predict[:, 3]
+# })
+# x_predict.to_csv('./dacon/sample_submission.csv', index = False )
 
-x_predict = pd.DataFrame({
+y_predict = pd.DataFrame({
   'id' : np.array(range(10000, 20000)),
   'hhb': y_predict[:,0],
   'hbo2': y_predict[:, 1],
   'ca': y_predict[:, 2],
   'na':y_predict[:, 3]
 })
-# x_predict.to_csv('./dacon/sample_submission.csv', index = False )
-x_predict.to_csv('./dacon/sample.csv', index = False )
-
-# x_predict.to_csv('./dacon/mysubmit.csv')
+y_predict.to_csv('./dacon/sample_submission.csv', index = False )
 
 
 # 서브밋파일 만든다.
 # .to_csv(경로)
 # 제출
+
+
+
