@@ -1,4 +1,4 @@
-# XGBClassifier
+# XGBClassifier : cmd -->pip install xgboost
 
 #유방암 - 컬럼 30개
 # 이진분류

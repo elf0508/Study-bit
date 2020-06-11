@@ -107,21 +107,16 @@ model = Sequential()
 model.add(Dense(128, input_shape= (71, ),
                 activation = 'relu'))
 model.add(Dropout(rate = 0.2))
-
 model.add(Dense(100, activation = 'relu'))
 model.add(Dense(25, activation = 'relu'))
 model.add(Dropout(rate = 0.20))
-
 model.add(Dense(30, activation = 'relu'))
 model.add(Dense(12, activation = 'relu'))
 model.add(Dropout(rate = 0.15))
-
 model.add(Dense(30, activation = 'relu'))
 model.add(Dropout(rate = 0.5))
-
 model.add(Dense(15, activation = 'relu'))
 model.add(Dropout(rate = 0.2))
-
 model.add(Dense(4, activation = 'relu'))
 
 model.summary()
@@ -163,6 +158,7 @@ y_predict.to_csv('./dacon/sample_submission.csv', index = False )
 # 서브밋파일 만든다.
 # .to_csv(경로)
 # 제출
+
 
 
 
