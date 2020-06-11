@@ -18,8 +18,8 @@ lr = LeakyReLU(alpha = 0.2)
 
 es = EarlyStopping(monitor = 'val_loss', mode = 'min', patience = 10)
 
-x = pd.read_csv('./data/dacon/comp3/train_features.csv', header=0, index_col=0)                                                     
-y = pd.read_csv('./data/dacon/comp3/train_target.csv', header=0, index_col=0)                                                       
+x = pd.read_csv('./dacon/comp3/train_features.csv', header=0, index_col=0)                                                     
+y = pd.read_csv('./dacon/comp3/train_target.csv', header=0, index_col=0)                                                       
 x_pred = pd.read_csv('./data/dacon/comp3/test_features.csv', header=0, index_col=1)
                                                        
 submission = pd.read_csv('./data/dacon/comp3/sample_submission.csv', header=0, index_col=0)
@@ -116,23 +116,29 @@ print(x_test.shape)    # (262500, 5)
 
 # 2.모델
 
-# from keras.layers import LeakyReLU
+from keras.layers import LeakyReLU
 
-# leaky = LeakyReLU(alpha = 0.2)
+leaky = LeakyReLU(alpha = 0.2)
 
 model = Sequential()
 
 model.add(LSTM(128, input_shape= (375, 5),
                activation = lr))
+model.add(Dropout(rate = 0.5))
+
+model.add(Dense(100, activation = lr))
 model.add(Dropout(rate = 0.2))
 
 model.add(Dense(64, activation = lr))
+model.add(Dense(34, activation = lr))
 model.add(Dropout(rate = 0.15))
 
 model.add(Dense(32, activation = lr))
+model.add(Dense(22, activation = lr))
 model.add(Dropout(rate = 0.1))
 
 model.add(Dense(16, activation = lr))
+model.add(Dropout(rate = 0.1))
 
 model.add(Dense(4, activation = lr))
 
@@ -149,15 +155,15 @@ model.fit(x, y, epochs = 1,
          batch_size = 32, validation_split = 0.2,
          callbacks = [es])  
 
-'''
+
 
 #4. 평가와 예측
 
-loss,mae = model.evaluate(x_test,y_test) 
+# loss,mae = model.evaluate(x_test,y_test) 
 
-print('mae 는', mae)
+# print('mae 는', mae)
 
-'''
+
 
 y_predict = model.predict(x_pred)
 
