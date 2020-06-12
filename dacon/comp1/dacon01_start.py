@@ -131,7 +131,7 @@ warnings.filterwarnings('ignore')
 
 # 3. 컴파일 및 훈련
 model.compile(loss ='mae', optimizer = 'adam', metrics = ['mae'])
-model.fit(x_train, y_train, epochs = 100,
+model.fit(x_train, y_train, epochs = 1,
          batch_size = 20, validation_split = 0.2,
          callbacks = [es])  
          
@@ -143,22 +143,27 @@ print('mae 는', mae)
 test = test.values  # 넘파이 형식으로 변환
 y_predict = model.predict(test)
 print(y_predict)
-'''
-y_predict = pd.DataFrame(y_predict) # 판다스로 변환해서,csv로 저장
-print(type(y_predict))
+
+# y_predict = pd.DataFrame(y_predict) # 판다스로 변환해서,csv로 저장
+# print(type(y_predict))
 # print(x_predict)
-'''
+
 
 
 y_predict = pd.DataFrame({
   'id' : np.array(range(10000, 20000)),
-  'hhb': y_predict[:,0],
+  'hhb': y_predict[:, 0],
   'hbo2': y_predict[:, 1],
   'ca': y_predict[:, 2],
   'na':y_predict[:, 3]
 })
-y_predict.to_csv('./dacon/sample_submission.csv', index = False )
+y_predict.to_csv('./dacon/sample_submission1.csv', index = False )
 
+# a = np.arange(10000,20000)
+# #np.arange--수열 만들때
+# submission = y_predict
+# submission = pd.DataFrame(submission, a)
+# submission.to_csv("./dacon/sample_submission.csv", header = ["hhb", "hbo2", "ca", "na"], index = True, index_label="id" )
 
 # 서브밋파일 만든다.
 # .to_csv(경로)
