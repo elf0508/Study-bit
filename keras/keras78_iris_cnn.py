@@ -27,7 +27,7 @@ x_train, x_test, y_train, y_test = train_test_split(x, y, train_size =0.8,random
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Conv2D, MaxPool2D, Flatten
 model = Sequential()
-model.add(Conv2D(10, (2, 2), input_shape = (2, 2,1 ), activation = 'relu', padding = 'same'))
+model.add(Conv2D(10, (2, 2), input_shape = (2, 2, 1 ), activation = 'relu', padding = 'same'))
 model.add(Conv2D(50, (2, 2),activation = 'relu', padding = 'same'))
 model.add(Dropout(0.1))
 model.add(Conv2D(50, (2, 2),activation = 'relu', padding = 'same'))

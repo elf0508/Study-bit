@@ -30,7 +30,8 @@ for i in range(len(y)):
         a =+ 0
     else:
         a =+ 1
-print(a)                             # 0
+print(a) 
+                            # 0
 # 이진 분류
 
 from sklearn.model_selection import train_test_split

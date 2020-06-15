@@ -104,11 +104,17 @@ import warnings
 
 model = Sequential()
 
-model.add(Dense(128, input_shape= (71, ),
+model.add(Dense(100, input_shape= (71, ),
+                activation = 'relu'))
+model.add(Dropout(rate = 0.15))
+
+model.add(Dense(50, input_shape= (71, ),
                 activation = 'relu'))
 model.add(Dropout(rate = 0.2))
 
-model.add(Dense(100, activation = 'relu'))
+model.add(Dense(60, activation = 'relu'))
+model.add(Dropout(rate = 0.8))
+
 model.add(Dense(25, activation = 'relu'))
 model.add(Dropout(rate = 0.20))
 
@@ -119,7 +125,7 @@ model.add(Dropout(rate = 0.15))
 model.add(Dense(30, activation = 'relu'))
 model.add(Dropout(rate = 0.5))
 
-model.add(Dense(15, activation = 'relu'))
+model.add(Dense(10, activation = 'relu'))
 model.add(Dropout(rate = 0.2))
 
 model.add(Dense(4, activation = 'relu'))
