@@ -8,17 +8,18 @@ import cv2
 from keras.models import Sequential
 from keras.layers import Dropout, Activation, Dense
 from keras.layers import Flatten, Convolution2D, MaxPooling2D
-# from keras.layers import Flatten, Convolution3D, MaxPooling3D
 from keras.models import load_model
 from keras.layers import Dense, LSTM, Dropout, Conv2D
-# from keras.layers import Dense, LSTM, Dropout, Conv3D
+from keras.preprocessing.image import ImageDataGenerator
+import sklearn.metrics as metrics
 
 
 ### 이미지 파일 불러오기 및 카테고리 정의
-# caltech_dir = './project/mini/images'
+
 caltech_dir = 'D:/Study-bit/project_mini/img'
+
 categories = ['dog_open', 'dog_closed']
-# categories = ['scooter', 'supersports', 'multipurpose', 'cruiser']
+
 nb_classes = len(categories)
 
 ### 가로, 세로, 채널 쉐이프 정의
@@ -26,7 +27,9 @@ image_w = 64
 image_h = 64
 pixels = image_h * image_w * 3
 
-### 이미지 파일 Data화
+# 사진의 크기를 64*64 크기로 변환 
+
+### 이미지 파일 Data화 (이미지 파일 변환)
 X = []
 Y = []
 
@@ -36,11 +39,17 @@ for idx, cat in enumerate(categories):
     image_dir = caltech_dir + '/' + cat
     files = glob.glob(image_dir + "/*.jpg")
     print(cat, " 파일 길이 : ", len(files))
+
     for i, f in enumerate(files):
         img = Image.open(f)
         img = img.convert('RGB')
         img = img.resize((image_w, image_h))
         data = np.asarray(img)
+
+# 각 이미지를 가지고 와서 RGB형태로 변환해준 뒤, resize 해준다.
+# 그 값을 numpy배열로 바꾸고, 배열에 추가(append)한다.
+# 동시에 category 값도 넣어준다.(Y)
+# Y는 0 아니면, 1이니까 label값으로 넣는다.
 
         X.append(data)
         Y.append(label)
@@ -66,10 +75,6 @@ dog_closed : 50개
 print(x.shape) # (200, 100, 100, 3)
 print(y.shape) # (100, 2)
 
-# print(x.shape) # (100, 64, 64, 3)
-# print(y.shape) # (200, 4)
-
-
 ### 데이터 train_test_split
 x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.8)
 xy = (x_train, x_test, y_train, y_test)
@@ -79,10 +84,6 @@ print(x_test.shape)     # (20, 64, 64, 3)
 print(y_train.shape)    # (80, 2)
 print(y_test.shape)     # (20, 2)
 
-# print(x_train.shape)    # (160, 100, 100, 3)
-# print(x_test.shape)     # (40, 100, 100, 3)
-# print(y_train.shape)    # (160, 4)
-# print(y_test.shape)     # (40, 4)
 
 ### 데이터 SAVE
 
@@ -94,7 +95,7 @@ cv2.waitKey(0)
 # Y.append(label)
 
 np.save('./project_mini/data/multi_image_data.npy', xy)
-# print('ok', len(y))
+print('ok', len(y))
 
 ### 데이터 load
 
@@ -103,47 +104,46 @@ xy = np.load('D:/Study-bit/project_mini/data.npy', allow_pickle=True)
 
 print(xy)
 
-# x : scaler
-# from sklearn.preprocessing import StandardScaler
-# scaler = StandardScaler()
-# scaler.fit(x)
-# x = scaler.transform(x).reshape(64, 8, 8, 3)
 
-# print(x.reshape)
+x_train = x_train.reshape(80, 64, 64, 3).astype('float32') /255  
+x_test = x_test.reshape(20, 64, 64, 3).astype('float32') /255
+
+print(x_train.shape) # (80, 64, 64, 3)
+print(x_test.shape)  # (20, 64, 64, 3)
+print(y_train.shape) # (80, 2)
+print(y_test.shape)  # (20, 2)
 
 
 ### 모델 만들기
 
 model = Sequential()
 
-model.add(Conv2D(10,(2, 2), input_shape =(64, 64, 3), activation = 'relu', padding = 'same'))
-# model.add(Conv2D(600,(4, 4), input_shape = x_train.shape[1:], activation = 'relu', padding = 'same'))
+model.add(Conv2D(600,(4, 4), input_shape = x_train.shape[1:], activation = 'relu', padding = 'same'))
 model.add(Dropout(0.2))
 model.add(MaxPooling2D(pool_size = 2))
 
-model.add(Conv2D(50,(2, 2), activation = 'relu', padding = 'same'))
+model.add(Conv2D(500,(3, 3), activation = 'relu', padding = 'same'))
 model.add(Dropout(0.2))
 
-model.add(Conv2D(80,(2, 2), activation = 'relu', padding = 'same'))
+model.add(Conv2D(480,(2, 2), activation = 'relu', padding = 'same'))
 model.add(Dropout(0.2))
 
-model.add(Conv2D(100, (2, 2),activation = 'relu', padding = 'same'))
+model.add(Conv2D(450, (2, 2),activation = 'relu', padding = 'same'))
 model.add(Dropout(0.2))
 
-model.add(Conv2D(150, (2, 2),activation = 'relu', padding = 'same'))
+model.add(Conv2D(350, (2, 2),activation = 'relu', padding = 'same'))
 model.add(Dropout(0.2))
 
-model.add(Conv2D(120, (2, 2),activation = 'relu', padding = 'same'))
+model.add(Conv2D(200, (2, 2),activation = 'relu', padding = 'same'))
 model.add(Dropout(0.2))
 
-model.add(Conv2D(80,(2, 2), activation = 'relu', padding = 'same'))
+model.add(Conv2D(180,(2, 2), activation = 'relu', padding = 'same'))
 model.add(Dropout(0.2))
 
-model.add(Conv2D(40,(2, 2), activation = 'relu', padding = 'same'))
+model.add(Conv2D(140,(2, 2), activation = 'relu', padding = 'same'))
 model.add(Dropout(0.2))
 
-model.add(Conv2D(20,(2, 2),activation = 'relu', padding = 'same'))
-
+model.add(Conv2D(20,(3, 3),activation = 'relu', padding = 'same'))
 model.add(Flatten())
 
 model.add(Dense(2, activation = 'sigmoid'))
@@ -163,10 +163,14 @@ ts_board = TensorBoard(log_dir = 'graph', histogram_freq = 0,
 
 # modelcheckpotin
 modelpath = './model/{epoch:02d}-{val_loss:.4f}.hdf5'
+
 ckpoint = ModelCheckpoint(filepath = modelpath, monitor = 'val_loss',
                           save_best_only = True)
 
+
+
 #3. 훈련
+
 model.compile(loss = 'binary_crossentropy', optimizer = 'adam', metrics = ['acc'])
 
 hist = model.fit(x_train, y_train, epochs = 100, batch_size = 32,
@@ -175,13 +179,31 @@ hist = model.fit(x_train, y_train, epochs = 100, batch_size = 32,
 
 #4. 평가, 예측 (evaluate, predict)
 
+print("-- Evaluate --")
 loss, acc = model.evaluate(x_test, y_test, batch_size = 32)
+
+# 해당 이미지를 predict
+print("-- Predict --")
 print('loss: ', loss )
 print('acc: ', acc)
 
+
+# 테스트할 이미지를 변환할 소스
+X = [ ]
+filenames = [ ]
+files = glob.glob(caltech_dir + "/*/*.*")
+for i, f in enumerate(files):
+    img = Image.open(f)
+    img = img.convert("RGB")
+    img = img.resize((image_w, image_h))
+
+    filenames.append(f)
+    X.append(data)
+
+
 '''
-loss:  0.7305496335029602
-acc:  0.4749999940395355
+loss:  0.6931824684143066
+acc:  0.5
 '''
 
 # graph
@@ -207,4 +229,48 @@ plt.ylabel('acc')
 plt.legend()
 
 plt.show()
+
+from PIL import Image
+import os, glob, numpy as np
+from keras.models import load_model, set_random_seed
+import tensorflow as tf
+# tensorflow import set_random_seed
+
+# seed = 2
+# tf.set_random_seed(seed)
+# np.random.seed(seed)
+
+caltech_dir = 'D:/Study-bit/project_mini/img'
+
+
+image_w = 64
+image_h = 64
+
+pixels = image_h * image_w * 3
+
+X = []
+filenames = []
+files = glob.glob(caltech_dir+"/*/*.*")
+for i, f in enumerate(files):
+    img = Image.open(f)
+    img = img.convert("RGB")
+    img = img.resize((image_w, image_h))
+    data = np.asarray(img)
+
+    filenames.append(f)
+    X.append(data)
+
+
+X = np.array(X)
+X = X.astype(float) / 255
+model = load_model('D:/Study-bit/project_mini/img')
+
+prediction = model.predict(X)
+np.set_printoptions(formatter={'float': lambda x: "{0:0.3f}".format(x)})
+cnt = 0
+
+for i in prediction:
+    if i >= 0.5: print("해당 " + filenames[cnt].split("\\")[1] + filenames[cnt].split("\\")[2] + "  이미지는 눈을 뜬걸로 추정됩니다.")
+    else : print("해당 " + filenames[cnt].split("\\")[1] + filenames[cnt].split("\\")[2] + "  이미지는 눈을 감은것으로 추정됩니다.")
+    cnt += 1
 

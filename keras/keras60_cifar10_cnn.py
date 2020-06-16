@@ -38,10 +38,10 @@ print(y_train.shape)           # (50000, 10)
 x_train = x_train.reshape(50000, 32, 32, 3).astype('float32') /255  
 x_test = x_test.reshape(10000, 32, 32, 3).astype('float32') /255
 
-print(x_train.shape)
-print(x_test.shape)
-print(y_train.shape)
-print(y_test.shape)
+print(x_train.shape) # (50000, 32, 32, 3)
+print(x_test.shape)  # (10000, 32, 32, 3)
+print(y_train.shape) # (50000, 10)
+print(y_test.shape)  # (10000, 10)
 
 # 모델 구성
 
@@ -99,4 +99,4 @@ print('acc :', acc )
 
 # print('y_pred : ', y_pred)  
 # print(y_pred.shape)                              
-         
+       
