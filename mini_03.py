@@ -5,18 +5,21 @@ from PIL import Image
 import os, glob, numpy as np
 from sklearn.model_selection import train_test_split
 import cv2
-from keras.models import Sequential
+from keras.models import Sequential,  Model
 from keras.layers import Dropout, Activation, Dense
 from keras.layers import Flatten, Convolution2D, MaxPooling2D
 from keras.models import load_model
-from keras.layers import Dense, LSTM, Dropout, Conv2D
+from keras.layers import Dense, LSTM, Dropout, Conv2D, Input
 from keras.preprocessing.image import ImageDataGenerator
 import sklearn.metrics as metrics
+from keras.preprocessing.image import ImageDataGenerator
+from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
 
 
 ### 이미지 파일 불러오기 및 카테고리 정의
 
 caltech_dir = 'D:/Study-bit/project_mini/img'
+# caltech_dir = 'train 이미지 경로'
 
 categories = ['dog_open', 'dog_closed']
 
@@ -34,10 +37,10 @@ pixels = image_h * image_w * 3
 X = []
 Y = []
 
-for idx, cat in enumerate(categories):
+for idx, cat in enumerate(categories):  # 카테고리별로 돌면서 0으로 초기화
     label = [0 for i in range(nb_classes)]
     label[idx] = 1
-    image_dir = caltech_dir + '/' + cat
+    image_dir = caltech_dir + '/' + cat  # cat --> category
     files = glob.glob(image_dir + "/*.jpg")
     print(cat, " 파일 길이 : ", len(files))
 
@@ -71,6 +74,7 @@ enumerate : 열거하다
 dog_open : 50개
 
 dog_closed : 50개
+
 '''
 
 print(x.shape) # (200, 100, 100, 3)
@@ -113,39 +117,80 @@ print(y_test.shape)  # (20, 2)
 
 ### 모델 만들기
 
+# input1 = Input(shape = (64, 64, 3))
+# input1_1 = Conv2D(10, (2, 2))(input1)
+# input1_2 = Conv2D(15, (2, 2))(input1_1)
+# drop1 = Dropout(0.5)(input1_2)
+
+# input1_3 = Conv2D(20, (2, 2))(drop1)
+# input1_4 = Conv2D(30, (2, 2))(input1_3)
+# drop2 = Dropout(0.2)(input1_4)
+
+# input1_5 = Conv2D(100, (2, 2))(drop2)
+# input1_6 = Conv2D(150, (2, 2))(input1_5)
+# drop3 = Dropout(0.2)(input1_6)
+
+# input1_7 = Conv2D(200, (2, 2))(drop3)
+# input1_8 = Conv2D(300, (2, 2))(input1_7)
+# drop4 = Dropout(0.2)(input1_8)
+
+# input1_9 = Conv2D(100, (2, 2))(drop4)
+# input1_10 = Conv2D(150, (2, 2))(input1_9)
+# drop5 = Dropout(0.2)(input1_10)
+
+# input1_11 = Conv2D(20, (2, 2))(drop5)
+# input1_12 = Conv2D(30, (2, 2))(input1_11)
+# drop6 = Dropout(0.2)(input1_12)
+
+# flatten = Flatten()(drop6) 
+# input1_13 = Dense(2, activation='softmax')(flatten)    
+
+# model = Model(inputs=input1, outputs = input1_13)
+
+# model.summary()
+
 model = Sequential()
 
-model.add(Conv2D(600,(4, 4), input_shape = x_train.shape[1:], activation = 'relu', padding = 'same'))
+model.add(Conv2D(3,(4, 4), input_shape = x_train.shape[1:], activation = 'relu', padding = 'same'))
 model.add(Dropout(0.8))
 model.add(MaxPooling2D(pool_size = 2))
 
-model.add(Conv2D(500,(3, 3), activation = 'relu', padding = 'same'))
+model.add(Conv2D(8,(3, 3), activation = 'relu', padding = 'same'))
+model.add(Dropout(0.8))
+model.add(MaxPooling2D(pool_size = 2))
+
+
+model.add(Conv2D(50,(3, 3), activation = 'relu', padding = 'same'))
+model.add(Dropout(0.2))
+
+model.add(Conv2D(250,(3, 3), activation = 'relu', padding = 'same'))
 model.add(Dropout(0.5))
 
-model.add(Conv2D(480,(2, 2), activation = 'relu', padding = 'same'))
-model.add(Dropout(0.3))
-
-model.add(Conv2D(450, (2, 2),activation = 'relu', padding = 'same'))
+model.add(Conv2D(40, (2, 2),activation = 'relu', padding = 'same'))
 model.add(Dropout(0.2))
 
-model.add(Conv2D(350, (2, 2),activation = 'relu', padding = 'same'))
+model.add(Conv2D(160, (2, 2),activation = 'relu', padding = 'same'))
+model.add(Conv2D(170, (2, 2),activation = 'relu', padding = 'same'))
 model.add(Dropout(0.2))
 
-model.add(Conv2D(200, (2, 2),activation = 'relu', padding = 'same'))
+model.add(Conv2D(7, (2, 2),activation = 'relu', padding = 'same'))
+model.add(Conv2D(19, (2, 2),activation = 'relu', padding = 'same'))
+
+
+model.add(Conv2D(30, (2, 2),activation = 'relu', padding = 'same'))
 model.add(Dropout(0.2))
 
-model.add(Conv2D(180,(2, 2), activation = 'relu', padding = 'same'))
+model.add(Conv2D(20, (2, 2),activation = 'relu', padding = 'same'))
 model.add(Dropout(0.2))
 
-model.add(Conv2D(140,(2, 2), activation = 'relu', padding = 'same'))
-model.add(Dropout(0.2))
 
-model.add(Conv2D(20,(3, 3),activation = 'relu', padding = 'same'))
+model.add(Conv2D(4,(3, 3),activation = 'relu', padding = 'same'))
 model.add(Flatten())
 
 model.add(Dense(2, activation = 'sigmoid'))
 
 model.summary()
+
 
 
 # callbacks
@@ -198,11 +243,6 @@ for i, f in enumerate(files):
     filenames.append(f)
     X.append(data)
 
-'''
-loss:  0.6931487321853638
-acc:  0.5
-acc:  0.6000000238418579
-'''
 
 # 그래프 (graph)
 
@@ -232,56 +272,6 @@ plt.legend()
 
 plt.show()
 
-### Open CV  ###
-
-from PIL import Image
-import os, glob, numpy as np
-from keras.models import load_model
-import tensorflow as tf
-
-# 칼라로
-img_color = cv2.imread("D:/Study-bit/project_mini/img", cv2.IMREAD_COLOR)
-cv2.namedWindow('Color')
-cv2.imshow('Color', img_color)
-cv2.waitKey(0)
-
-# 회색으로
-img_gray = cv2.cvtColor("D:/Study-bit/project_mini/img", cv2.COLOR_BGR2GRAY)
-
-cv2.imshow("D:/Study-bit/project_mini/img", img_gray)
-
-cv2.waitKey(0)
-
-cv2.imwrite('saved_image.jpg', img_gray)
-
-cv2.destroyAllWindows()
-
-# showImage()
-'''
-def showImage():
-    imgfile = 'D:/Study-bit/project_mini/img'
-    img = cv2.imread(imgfile, cv2.IMREAD_COLOR)
-    # imread함수는 이미지 파일을 읽기 위한 객체를 리턴한다.
-    # 이 함수의 첫번째 인자는 읽고자 하는 이미지의 경로 파일
-    # 두 번째 인자는 이미지 파일을 읽는 방식을 나타내는 플래그이다.
-
-    # 플래그 종류
-    # cv2.IMREAD_COLOR : 컬러 이밎로 로드, 이미지의 투명한 부분은 모두 무시됨, 디폴트 플래그,정수값은 1
-    # cv2.IMREAD_GRAYSCALE : 흑백 이미지로 로드, 정수값은 0
-    # cv2.IMREAD_UNCHANGED : 알파채널을 포함하여 이미지 그대로 로드, 정수값은 -1
-
-    cv2.imshow('project_mini/img', img)
-    # cv2.imshow()에 의해 번환된 이미지 객체 img를 화면에 나타내기 위한 함수
-    # 이 함수는 첫번째 인자는 윈도우 타이틀이며, 두번째 인자는 화면에 표시할 이미지 객체이다.
-    cv2.waitKey(0)
-    # cv2.waitKey()함수는 지정된 시간동안 키보드 입력을 기다리는 함수
-    cv2.destroyAllWindows()
-    # 생성한 모든 윈도를 제거한다.
-
-showImage()
-'''
-
-'''
 caltech_dir = 'D:/Study-bit/project_mini/img'
 
 
@@ -305,14 +295,18 @@ for i, f in enumerate(files):
 
 X = np.array(X)
 X = X.astype(float) / 255
-model = load_model('D:/Study-bit/project_mini/img')
+# model = load_model('D:\Study-bit\project_mini\img')
 
 prediction = model.predict(X)
 np.set_printoptions(formatter={'float': lambda x: "{0:0.3f}".format(x)})
 cnt = 0
 
+print(prediction)
+
 for i in prediction:
-    if i >= 0.5: print("해당 " + filenames[cnt].split("\\")[1] + filenames[cnt].split("\\")[2] + "  이미지는 눈을 뜬걸로 추정됩니다.")
-    else : print("해당 " + filenames[cnt].split("\\")[1] + filenames[cnt].split("\\")[2] + "  이미지는 눈을 감은것으로 추정됩니다.")
+    if i[0]>i[1]: 
+        print("해당" + filenames[cnt].split("\\")[1] + filenames[cnt].split("\\")[2] + "이미지는 눈을 뜬걸로 추정됩니다.")
+    else : 
+        print("해당" + filenames[cnt].split("\\")[1] + filenames[cnt].split("\\")[2] + "이미지는 눈을 감은것으로 추정됩니다.")
     cnt += 1
-'''
+
