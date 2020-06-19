@@ -95,7 +95,6 @@ print(y_test.shape)     # (20, 2)
 np.save('D:/Study-bit/project_mini/data.npy', xy)
 print('ok', len(y))
 
-cv2.waitKey(0)
 
 np.save('./project_mini/data/multi_image_data.npy', xy)
 

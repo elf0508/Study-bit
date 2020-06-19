@@ -15,33 +15,15 @@ import sklearn.metrics as metrics
 from keras.preprocessing.image import ImageDataGenerator
 from keras.preprocessing.image import array_to_img, img_to_array, load_img
 
-
-# datagen = ImageDataGenerator(
-
-#     rotation_range = 40,     # 이미지 회전 범위 (degrees)
-#         width_shift_range = 0.2,  # 그림을 수평 또는 수직으로 랜덤하게 평행 이동시키는 범위 
-#                                   # (원본 가로, 세로 길이에 대한 비율 값)
-#         height_shift_range = 0.2,    
-#         rescale = 1./255,         
-#         #원본 영상은 0-255의 RGB 계수로 구성되는데, 
-#         #이 같은 입력값은 모델을 효과적으로 학습시키기에 너무 높음 (통상적인 learning rate를 사용할 경우). 
-#         # 그래서 이를 1/255로 스케일링하여 0-1 범위로 변환. 이는 다른 전처리 과정에 앞서 가장 먼저 적용.
-        
-#         shear_range = 0.2,     #임의 전단 변환 (shearing transformation) 범위
-#         zoom_range = 0.2,      #임의 확대/축소 범위
-#         horizontal_flip = True, #True로 설정할 경우, 50% 확률로 이미지를 수평으로 뒤집음. 
-#          # 원본 이미지에 수평 비대칭성이 없을 때 효과적. 즉, 뒤집어도 자연스러울 때 사용하면 좋음.
-#          fill_mode='nearest')   #이미지를 회전, 이동하거나 축소할 때 생기는 공간을 채우는 방식
-
-
 ### 이미지 파일 불러오기 및 카테고리 정의
 
 caltech_dir = 'D:/Study-bit/project_mini/img'
+# 디렉토리 지정
 # caltech_dir = 'train 이미지 경로'
 
-categories = ['dog_open', 'dog_closed']
-
-nb_classes = len(categories)
+categories = ['dog_1', 'dog_2']
+# 카테고리 분류
+nb_classes = len(categories)  # 위에 categories에 [  ] 2개가 들어가 있어서 len = 2
 
 ### 가로, 세로, 채널 쉐이프 정의
 
@@ -52,50 +34,58 @@ pixels = image_h * image_w * 3
 # 사진의 크기를 64*64 크기로 변환 
 
 ### 이미지 파일 Data화 (이미지 파일 변환)
+# numpy로 데이터화
 X = []
 Y = []
 
-for idx, cat in enumerate(categories):  # 카테고리별로 돌면서 0으로 초기화
-    label = [0 for i in range(nb_classes)]
-    label[idx] = 1
-    image_dir = caltech_dir + '/' + cat  # cat --> category
-    files = glob.glob(image_dir + "/*.jpg")
+for idx, cat in enumerate(categories):  
+    # 카테고리별로 돌면서 0으로 초기화
+    # 카테고리 안에 있는 것을 밖으로 뽑아주는 것(인덱스, 파일명)
+    label = [0 for i in range(nb_classes)]  # == [0 for i in range(2)] --> label [0, 1]
+    # print(label)
+    label[idx] = 1  # 인덱스 자리에 1을 넣어주겠다. --> label [1, 0], [0, 1] : y를 만들어 주는 것
+    image_dir = caltech_dir + '/' + cat  # 이미지 디렉토리 지정, cat --> category
+    files = glob.glob(image_dir + "/*.jpg") # glob.glob : 이미지를 불러오는 함수, jpg 파일형식으로 
+                            # + "/** " : 모든 파일을 가져오겠다는 뜻
     print(cat, " 파일 길이 : ", len(files))
+    #      파일명,             가져온 파일의 갯수
+    # 여기까지가 cat으로 지정한 폴더를  불러오겠다는 뜻
 
-    for i, f in enumerate(files):
-        img = Image.open(f)
+    for i, f in enumerate(files): # 파일(이미지)를 불러온다. i : 파일 번호, 파일 이름 / f : 파일
+        img = Image.open(f) 
         img = img.convert('RGB')
-        img = img.resize((image_w, image_h))
-        data = np.asarray(img)
+        img = img.resize((image_w, image_h))  # resize (크기 조정)
+        data = np.asarray(img)  # 이미지를 np형식으로 바꿔준다.
 
-# 각 이미지를 가지고 와서 RGB형태로 변환해준 뒤, resize 해준다.
+# 각 이미지를 가지고 와서 RGB형태로 변환해준 뒤, resize (크기 조정) 해준다.
 # 그 값을 numpy배열로 바꾸고, 배열에 추가(append)한다.
 # 동시에 category 값도 넣어준다.(Y)
 # Y는 0 아니면, 1이니까 label값으로 넣는다.
 
-        X.append(data)
-        Y.append(label)
+        X.append(data)  # 숫자 데이터들을 데이터셋으로 만들어준다.
+        Y.append(label) 
 
-        if i % 700 == 0:
+        if i % 700 == 0:  # 700의 나머지가 0이 됐을때, 출력해서 보여주는것
             print(cat, ':', f)
 
 x = np.array(X)
 y = np.array(Y)
 
-'''
-enumerate : 열거하다
-리스트가 있는 경우 순서와 리스트의 값을 전달하는 기능을 가집니다.
-이 함수는 순서가 있는 자료형(list, set, tuple, dictionary, string)을 입력으로 받아 
-인덱스 값을 포함하는 enumerate 객체를 리턴합니다.
-보통 enumerate 함수는 for문과 함께 자주 사용됩니다.
 
-dog_open : 50개
+# enumerate : 열거하다
+# 리스트가 있는 경우 순서와 리스트의 값을 전달하는 기능을 가집니다.
+# 이 함수는 순서가 있는 자료형(list, set, tuple, dictionary, string)을 입력으로 받아 
+# 인덱스 값을 포함하는 enumerate 객체를 리턴합니다.
+# 보통 enumerate 함수는 for문과 함께 자주 사용됩니다.
 
-dog_closed : 50개
+# dog_open : 50개
 
-'''
+# dog_closed : 50개
 
-print(x.shape) # (200, 100, 100, 3)
+
+# numpy로 변환해서 train_test_split로 데이터셋을 나눈다.
+
+print(x.shape) # (100, 64, 64, 3)
 print(y.shape) # (100, 2)
 
 ### 데이터 train_test_split
@@ -112,8 +102,6 @@ print(y_test.shape)     # (20, 2)
 
 np.save('D:/Study-bit/project_mini/data.npy', xy)
 print('ok', len(y))
-
-cv2.waitKey(0)
 
 np.save('./project_mini/data/multi_image_data.npy', xy)
 
@@ -180,7 +168,7 @@ es = EarlyStopping(monitor = 'val_loss', patience = 50, verbose = 1 )
 ts_board = TensorBoard(log_dir = 'graph', histogram_freq = 0,
                         write_graph = True, write_images = True)
 
-# modelcheckpotin
+# modelcheckpotin   # pred하기 위해 저장
 modelpath = './model/{epoch:02d}-{val_loss:.4f}.hdf5'
 
 ckpoint = ModelCheckpoint(filepath = modelpath, monitor = 'val_loss',
@@ -191,7 +179,7 @@ ckpoint = ModelCheckpoint(filepath = modelpath, monitor = 'val_loss',
 
 model.compile(loss = 'binary_crossentropy', optimizer = 'adam', metrics = ['acc'])
 
-hist = model.fit(x_train, y_train, epochs = 1000, batch_size = 32,
+hist = model.fit(x_train, y_train, epochs = 100, batch_size = 32,
                 validation_split = 0.2, verbose = 2,
                 callbacks = [es])
 
@@ -206,14 +194,11 @@ print("-- Predict --")
 print('loss: ', loss )
 print('acc: ', acc)
 
+# loss:  1.0873358249664307
+# acc:  0.699999988079071
 
-'''
-loss:  1.0873358249664307
-acc:  0.699999988079071
 
-'''
-
-# 테스트할 이미지를 변환할 소스
+# 테스트할 이미지를 변환할 소스 (데이터화)
 
 X = [ ]
 filenames = [ ]
@@ -281,17 +266,23 @@ X = X.astype(float) / 255
 # model = load_model('D:\Study-bit\project_mini\img')
 
 prediction = model.predict(X)
+# y_pred = model.predict(X)
 np.set_printoptions(formatter={'float': lambda x: "{0:0.3f}".format(x)})
-cnt = 0
+                                # lambda 함수를 사용해서 소수점 3자리까지 보여지도록
+cnt = 0  # 처음 시작
 
 print(prediction)
+# print(y_pred)
 
-for i in prediction:
-    if i[0]>i[1]: 
+for i in prediction:  #  y_pred
+# for i in for i in  y_pred :  
+    if i[0]>i[1]:             # cnt : 파일 순서 : 0
         print("해당" + filenames[cnt].split("\\")[1] + filenames[cnt].split("\\")[2] + "이미지는 눈을 뜬걸로 추정됩니다.")
+                                # 폴더명(카테고리)  +   파일 이름
     else : 
         print("해당" + filenames[cnt].split("\\")[1] + filenames[cnt].split("\\")[2] + "이미지는 눈을 감은것으로 추정됩니다.")
-    cnt += 1
+    cnt += 1   # 그 다음 파일을 열기 위해서 +1 을 해준다.
 
+# split함수를 사용해서 파일명과 함께 예측값을 출력해준다.
 
 
