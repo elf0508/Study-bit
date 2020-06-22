@@ -1,6 +1,4 @@
-# 저장하는 것
-
-# 저장하는 것
+# xgb_save_저장하는 것
 
 from sklearn.feature_selection import SelectFromModel
 import numpy as np
@@ -32,7 +30,7 @@ print('acc : ', acc)
 
 #########################################################
 
-''' save_model_save'''
+''' xgb_save'''
 
 # import pickle      # 파이썬에서 제공한다.                                          # write b
 # pickle.dump(model, open("./model/xgb_save/cancer.pickle.dat", "wb")) # model을 cancer.pickle.dat에 넣겠다.
@@ -45,7 +43,7 @@ print('acc : ', acc)
 model.save_model("./model/xgb_save/cancer.xgb.model")
 print("저장됬다.")
 
-''' save_model_load '''
+''' xgb_save_load '''
 
 # model2 = pickle.load(open("./model/xgb_save/cancer.pickle.dat", "rb"))
 # model2 = joblib.load("./model/xgb_save/cancer.joblib.dat")

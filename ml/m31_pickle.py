@@ -1,4 +1,4 @@
-# 저장하는 것
+# pickle_저장하는 것
 
 from sklearn.feature_selection import SelectFromModel
 import numpy as np
