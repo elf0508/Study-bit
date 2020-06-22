@@ -44,7 +44,7 @@ for thresh in thresholds : # thresh : feature importance 값 // 모델 선택함
 # colomn이 하나씩, 중요하지 않은 애들부터 지움
 # 중요한 애들 빼내
 
-    selection_model =  XGBRegressor()
+    selection_model =  XGBRegressor(n_jobs=-1)
     selection_model.fit(select_x_train, y_train)      
     
     select_x_test = selection.transform(x_test)
