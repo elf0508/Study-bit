@@ -1,4 +1,3 @@
-# 보스턴 - 회귀
 
 
 import numpy as np
@@ -11,7 +10,7 @@ from keras.callbacks import EarlyStopping
 from sklearn.feature_selection import SelectFromModel
 from sklearn.model_selection import train_test_split, GridSearchCV, KFold,  RandomizedSearchCV
 from sklearn.metrics import accuracy_score, r2_score
-from xgboost import XGBClassifier, plot_importance, XGBRegressor
+from xgboost import XGBClassifier, plot_importance, XGBRegressor, plot_importance  
 from sklearn.multioutput import MultiOutputRegressor
 from sklearn.metrics import r2_score, mean_absolute_error
 import warnings
@@ -21,11 +20,11 @@ from sklearn.ensemble import RandomForestRegressor
 
 # es = EarlyStopping(monitor = 'val_loss', mode = 'min', patience = 10)
 
-train = pd.read_csv('./dacon/comp1/data/train.csv', header=0, index_col=0)
+train = pd.read_csv('./dacon/comp1/train.csv', header=0, index_col=0)
 
-test = pd.read_csv('./dacon/comp1/data/test.csv', header=0, index_col=0)
+test = pd.read_csv('./dacon/comp1/test.csv', header=0, index_col=0)
 
-submission = pd.read_csv('./dacon/comp1/data/sample_submission.csv', header=0, index_col=0)
+submission = pd.read_csv('./dacon/comp1/sample_submission.csv', header=0, index_col=0)
 
 print('train.shape : ', train.shape)  # (10000, 75) : x_train, x_test
 
@@ -124,8 +123,36 @@ kfold = KFold(n_splits=5, shuffle=True, random_state=66)
 search = RandomizedSearchCV(XGBRegressor( eval_metric='mae'), parameters, cv = kfold, n_iter=1, n_jobs=-1)
 
 search = MultiOutputRegressor(search)
+search = MultiOutputRegressor(search.feature_importances_arch)
 
 search.fit(x_train, y_train)
+
+threshold = np.sort(search.feature_importances_)
+
+for thres in threshold:
+    selection = SelectFromModel(search, threshold = thres, prefit = True)
+    
+    select_x_train = selection.transform(x_train)
+    select_x_test = selection.transform(x_test)
+
+    selection_model = XGBRegressor(n_estimators = 100, learning_rate = 0.05, n_jobs = -1) 
+
+    selection_model.fit(select_x_train, y_train, verbose= False, eval_metric= ['logloss', 'rmse'],
+                                        eval_set= [(select_x_train, y_train), (select_x_test, y_test)],
+                                        early_stopping_rounds= 20)
+
+
+
+    y_pred = selection_model.predict(select_x_test)
+    r2 = r2_score(y_test, y_pred)
+
+    print("Thresh=%.3f, n = %d, R2 : %.2f%%" %(thres, select_x_train.shape[1], r2*100.0))
+
+    result = selection_model.evals_result()
+    # print("eval's result : ", result)
+
+    search.save_model("./model/xgb_save/thresh=%.3f-r2=%.2f.model"%(thres, r2))
+####################################
 
 # print(search.best_params_)
 
@@ -152,7 +179,6 @@ submission.to_csv('./dacon/sample_submission1.csv', index = False)
 # y_pred = search.predict(submission)
 
 # submission = pd.DataFrame({
-
 #     "id": test.index,
 #     "hhb": y_pred[:,0],
 #     "hbo2": y_pred[:,1],
@@ -163,37 +189,26 @@ submission.to_csv('./dacon/sample_submission1.csv', index = False)
 # submission.to_csv('./dacon/sample_submission1.csv', index = False)
 
 # test = test.values  # 넘파이 형식으로 변환
-
 # y_predict = model.predict(test)
-
 # print(y_predict)
 
 # y_predict = pd.DataFrame(y_predict) # 판다스로 변환해서,csv로 저장
-
 # print(type(y_predict))
-
 # print(x_predict)
 
 # y_predict = pd.DataFrame({
-
 #   'id' : np.array(range(10000, 20000)),
-
 #   'hhb': y_predict[:, 0],
 #   'hbo2': y_predict[:, 1],
 #   'ca': y_predict[:, 2],
 #   'na':y_predict[:, 3]
 # })
-
 # y_predict.to_csv('./dacon/sample_submission1.csv', index = False )
 
 # a = np.arange(10000,20000)
-
 # #np.arange--수열 만들때
-
 # submission = y_predict
-
 # submission = pd.DataFrame(submission, a)
-
 # submission.to_csv("./dacon/sample_submission.csv", header = ["hhb", "hbo2", "ca", "na"], index = True, index_label="id" )
 
 # 서브밋파일 만든다.
