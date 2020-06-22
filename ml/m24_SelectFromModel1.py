@@ -64,7 +64,7 @@ for thresh in thresholds : # thresh : feature importance 값 // 모델 선택함
     # 중요한 애들 빼내
 
 #########################  여기서 부터
-    selection_model =  XGBRegressor()
+    selection_model =  XGBRegressor(n_jobs=-1)
     # 그리드 서치 적용할 것
     selection_model.fit(select_x_train, y_train)      # 이거 대신에 그리드 서치 사용
 ##################  여기 까지 m23xgb3번 복붙
