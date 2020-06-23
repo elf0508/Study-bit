@@ -10,9 +10,10 @@ print(x.shape)
 print(y.shape)
 
 x_train, x_test, y_train, y_test = train_test_split(x, y, train_size = 0.8,
-                                                    shuffle = True, random_state = 66)
+                                            shuffle = True, random_state = 66)
 
-model = XGBClassifier(objective='multi:softmax', n_estimators = 100, learning_rate = 0.05, n_jobs = -1)
+model = XGBClassifier(objective='multi:softmax', n_estimators = 100, 
+                        learning_rate = 0.05, n_jobs = -1)
 
 model.fit(x_train, y_train, verbose = True, eval_metric= ['mlogloss', 'merror'],
                             eval_set= [(x_train, y_train),(x_test, y_test)],

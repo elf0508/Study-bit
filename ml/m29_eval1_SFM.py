@@ -33,7 +33,7 @@ print(x.shape)
 print(y.shape)
 
 x_train, x_test, y_train, y_test = train_test_split(x, y, train_size = 0.8,
-                                                    shuffle = True, random_state = 66)
+                                            shuffle = True, random_state = 66)
 
 # model = XGBRegressor(n_estimators = 100, learning_rate = 0.05, n_jobs = -1) 
 model = XGBRegressor(gpu_id=0, tree_method='gpu_hist',  n_jobs = -1)

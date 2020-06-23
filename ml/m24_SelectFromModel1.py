@@ -15,7 +15,7 @@ from sklearn.metrics import accuracy_score, r2_score
 x, y = load_boston(return_X_y=True)
 
 x_train, x_test, y_train, y_test = train_test_split(x, y, train_size = 0.8,
-                                                    shuffle = True, random_state = 66)
+                                        shuffle = True, random_state = 66)
 
 # feature_importances_ 를 찾는 과정
 model = XGBRegressor()

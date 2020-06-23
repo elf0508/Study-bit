@@ -163,6 +163,7 @@ print("mae : ", pred)
 
 # xgboost 나 GradientBoosting 할 때, shape 안맞다고 에러 뜰 때
 from sklearn.multioutput import MultiOutputRegressor
+from sklearn.metrics import accuracy_score
 
 model = MultiOutputRegressor(xgb.XGBRFRegressor())
 model.fit(x_train,y_train)
@@ -231,20 +232,20 @@ y_predict = model.predict(test)
 print(y_predict)
 '''
 
-'''
+
 y_predict = pd.DataFrame(y_predict) # 판다스로 변환해서,csv로 저장
 print(type(y_predict))
 # print(x_predict)
-'''
 
-# y_predict = pd.DataFrame({
-#   'id' : np.array(range(10000, 20000)),
-#   'hhb': y_predict[:,0],
-#   'hbo2': y_predict[:, 1],
-#   'ca': y_predict[:, 2],
-#   'na':y_predict[:, 3]
-# })
-# y_predict.to_csv('./dacon/sample_submission_1.csv', index = False )
+
+y_predict = pd.DataFrame({
+  'id' : np.array(range(10000, 20000)),
+  'hhb': y_predict[:,0],
+  'hbo2': y_predict[:, 1],
+  'ca': y_predict[:, 2],
+  'na':y_predict[:, 3]
+})
+y_predict.to_csv('./dacon/sample_submission_1.csv', index = False )
 
 
 # 서브밋파일 만든다.
