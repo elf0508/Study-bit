@@ -35,8 +35,8 @@ print(y.shape)
 x_train, x_test, y_train, y_test = train_test_split(x, y, train_size = 0.8,
                                                     shuffle = True, random_state = 66)
 
-model = XGBRegressor(n_estimators = 100, learning_rate = 0.05, n_jobs = -1) 
-
+# model = XGBRegressor(n_estimators = 100, learning_rate = 0.05, n_jobs = -1) 
+model = XGBRegressor(gpu_id=0, tree_method='gpu_hist',  n_jobs = -1)
 model.fit(x_train, y_train)
 
 threshold = np.sort(model.feature_importances_)
@@ -47,7 +47,8 @@ for thres in threshold:
     select_x_train = selection.transform(x_train)
     select_x_test = selection.transform(x_test)
 
-    selection_model = XGBRegressor(n_estimators = 100, learning_rate = 0.05, n_jobs = -1) 
+    # selection_model = XGBRegressor(n_estimators = 100, learning_rate = 0.05, n_jobs = -1) 
+    selection_model = XGBRegressor(gpu_id=0, tree_method='gpu_hist',  n_jobs = -1) 
 
     selection_model.fit(select_x_train, y_train, verbose= False, eval_metric= ['logloss', 'rmse'],
                                         eval_set= [(select_x_train, y_train), (select_x_test, y_test)],
@@ -60,6 +61,8 @@ for thres in threshold:
 
     # result = selection_model.evals_result()
     # print("eval's result : ", result)
+
+# model = XGBRegressor(n_estimators = 100, learning_rate = 0.05, n_jobs = -1) 의 결과 값
 
 # Thresh=0.003, n = 13, R2 : 93.54%
 # Thresh=0.005, n = 12, R2 : 93.71%
@@ -74,6 +77,23 @@ for thres in threshold:
 # Thresh=0.045, n = 3, R2 : 89.30%
 # Thresh=0.248, n = 2, R2 : 81.05%
 # Thresh=0.569, n = 1, R2 : 69.21%
+
+# model = XGBRegressor(gpu_id=0, tree_method='gpu_hist',  n_jobs = -1) 의 결과 값
+
+# Thresh=0.003, n = 13, R2 : 91.54%
+# Thresh=0.004, n = 12, R2 : 91.14%
+# Thresh=0.008, n = 11, R2 : 90.37%
+# Thresh=0.009, n = 10, R2 : 91.43%
+# Thresh=0.016, n = 9, R2 : 91.75%
+# Thresh=0.016, n = 8, R2 : 91.94%
+# Thresh=0.020, n = 7, R2 : 91.21%
+# Thresh=0.023, n = 6, R2 : 90.99%
+# Thresh=0.039, n = 5, R2 : 90.61%
+# Thresh=0.057, n = 4, R2 : 90.58%
+# Thresh=0.066, n = 3, R2 : 91.39%
+# Thresh=0.309, n = 2, R2 : 84.13%
+# Thresh=0.429, n = 1, R2 : 68.82%
+
 
 
 '''

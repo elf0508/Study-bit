@@ -129,6 +129,9 @@ model.add(Dropout(rate = 0.5))
 model.add(Dense(100, activation = lr))
 model.add(Dropout(rate = 0.2))
 
+model.add(Dense(500, activation = lr))
+model.add(Dropout(rate = 0.2))
+
 model.add(Dense(64, activation = lr))
 model.add(Dense(34, activation = lr))
 model.add(Dropout(rate = 0.15))
@@ -155,37 +158,29 @@ model.fit(x, y, epochs = 1,
          batch_size = 32, validation_split = 0.2,
          callbacks = [es])  
 
-
-
 #4. 평가와 예측
 
 # loss,mae = model.evaluate(x_test,y_test) 
 # print('mae 는', mae)
 
-test = test.values  # 넘파이 형식으로 변환
+loss,mae = model.evaluate(x, y) 
+print('mae 는', mae)
+
+# test = test.values  # 넘파이 형식으로 변환
 y_predict = model.predict(x_pred)
 print(y_predict)
 
-# y_predict = pd.DataFrame(y_predict) # 판다스로 변환해서,csv로 저장
+y_predict = y_predict.reshape()
+y_predict = pd.DataFrame(y_predict) # 판다스로 변환해서,csv로 저장
 # print(type(y_predict))
+print(y_predict)
+# print(x_pred)
 # print(x_predict)
 
 
-
-y_predict = pd.DataFrame({
-  'id' : np.array(range(10000, 20000)),
-  'hhb': y_predict[:, 0],
-  'hbo2': y_predict[:, 1],
-  'ca': y_predict[:, 2],
-  'na':y_predict[:, 3]
-})
-y_predict.to_csv('./dacon/sample_submission1.csv', index = False )
-
-# a = np.arange(10000,20000)
-# #np.arange--수열 만들때
-# submission = y_predict
-# submission = pd.DataFrame(submission, a)
-# submission.to_csv("./dacon/sample_submission.csv", header = ["hhb", "hbo2", "ca", "na"], index = True, index_label="id" )
+a = np.arange(2800, 3500)
+submission = pd.DataFrame(y_pred, a)
+submission.to_csv('./dacon/comp3/submission_1.csv', index = True, index_label= ['id'], header = ['X', 'Y', 'M', 'V'])
 
 
 # 서브밋파일 만든다.

@@ -14,7 +14,8 @@ print(y.shape)
 x_train, x_test, y_train, y_test = train_test_split(x, y, train_size = 0.8,
                                                     shuffle = True, random_state = 66)
 
-model = XGBClassifier(objective='multi:softmax', n_estimators = 100, learning_rate = 0.05, n_jobs = -1)
+# model = XGBClassifier(objective='multi:softmax', n_estimators = 100, learning_rate = 0.05, n_jobs = -1)
+model = XGBClassifier(gpu_id=0, tree_method='gpu_hist')
 
 model.fit(x_train, y_train)
 
@@ -28,7 +29,8 @@ for thres in threshold:
     select_x_train = selection.transform(x_train)
     select_x_test = selection.transform(x_test)
 
-    selection_model = XGBClassifier(objective='multi:softmax', n_estimators = 100, learning_rate = 0.05, n_jobs = -1) 
+    # selection_model = XGBClassifier(objective='multi:softmax', n_estimators = 100, learning_rate = 0.05, n_jobs = -1) 
+    selection_model = XGBClassifier(gpu_id=0, tree_method='gpu_hist')
 
     selection_model.fit(select_x_train, y_train, verbose= False, eval_metric= ['mlogloss', 'merror'],
                                         eval_set= [(select_x_train, y_train), (select_x_test, y_test)],
@@ -45,14 +47,25 @@ for thres in threshold:
 end = time.time() - start
 print(" 걸린 시간 :", end)
 
+# model = XGBClassifier(objective='multi:softmax', n_estimators = 100, learning_rate = 0.05, n_jobs = -1)
+#           의 결과 값
+
 # Thresh=0.022, n = 4, ACC : 100.00%
 # Thresh=0.041, n = 3, ACC : 100.00%
 # Thresh=0.463, n = 2, ACC : 100.00%
 # Thresh=0.473, n = 1, ACC : 93.33%
 #  걸린 시간 : 0.34758806228637695
 
-
 # acc :100.00%
+
+# model = XGBClassifier(gpu_id=0, tree_method='gpu_hist')의 결과 값
+
+# Thresh=0.023, n = 4, ACC : 100.00%
+# Thresh=0.024, n = 3, ACC : 100.00%
+# Thresh=0.442, n = 2, ACC : 100.00%
+# Thresh=0.512, n = 1, ACC : 93.33%
+#  걸린 시간 : 0.8088362216949463
+
 
 '''
 

@@ -14,8 +14,8 @@ print(y.shape)
 x_train, x_test, y_train, y_test = train_test_split(x, y, train_size = 0.8,
                                                     shuffle = True, random_state = 66)
 
-model = XGBClassifier(n_estimators = 100, learning_rate = 0.05, n_jobs = -1)
-
+# model = XGBClassifier(n_estimators = 100, learning_rate = 0.05, n_jobs = -1)
+model = XGBClassifier(gpu_id=0, tree_method='gpu_hist',  n_jobs = -1)
 model.fit(x_train, y_train)
 
 threshold = np.sort(model.feature_importances_)
@@ -26,7 +26,8 @@ for thres in threshold:
     select_x_train = selection.transform(x_train)
     select_x_test = selection.transform(x_test)
 
-    selection_model = XGBClassifier(n_estimators = 100, learning_rate = 0.05, n_jobs = -1) 
+    # selection_model = XGBClassifier(n_estimators = 100, learning_rate = 0.05, n_jobs = -1) 
+    selection_model = XGBClassifier(gpu_id=0, tree_method='gpu_hist',  n_jobs = -1)
 
     selection_model.fit(select_x_train, y_train, verbose= False, eval_metric= ['logloss', 'error'],
                                         eval_set= [(select_x_train, y_train), (select_x_test, y_test)],
@@ -39,6 +40,7 @@ for thres in threshold:
 
     # result = selection_model.evals_result()
     # print("eval's result : ", result)
+# model = XGBClassifier(n_estimators = 100, learning_rate = 0.05, n_jobs = -1) 의 결과 값
 
 # Thresh=0.001, n = 30, ACC : 96.49%
 # Thresh=0.002, n = 29, ACC : 96.49%
@@ -70,6 +72,39 @@ for thres in threshold:
 # Thresh=0.123, n = 3, ACC : 96.49%
 # Thresh=0.166, n = 2, ACC : 92.11%
 # Thresh=0.267, n = 1, ACC : 88.60%
+
+#   selection_model = XGBClassifier(gpu_id=0, tree_method='gpu_hist',  n_jobs = -1)의 결과 값
+
+# Thresh=0.000, n = 30, ACC : 98.25%
+# Thresh=0.000, n = 30, ACC : 98.25%
+# Thresh=0.000, n = 30, ACC : 98.25%
+# Thresh=0.001, n = 27, ACC : 98.25%
+# Thresh=0.002, n = 26, ACC : 98.25%
+# Thresh=0.002, n = 25, ACC : 98.25%
+# Thresh=0.003, n = 24, ACC : 98.25%
+# Thresh=0.003, n = 23, ACC : 97.37%
+# Thresh=0.004, n = 22, ACC : 97.37%
+# Thresh=0.004, n = 21, ACC : 98.25%
+# Thresh=0.005, n = 20, ACC : 98.25%
+# Thresh=0.006, n = 19, ACC : 98.25%
+# Thresh=0.007, n = 18, ACC : 97.37%
+# Thresh=0.008, n = 17, ACC : 97.37%
+# Thresh=0.011, n = 16, ACC : 97.37%
+# Thresh=0.011, n = 15, ACC : 97.37%
+# Thresh=0.012, n = 14, ACC : 97.37%
+# Thresh=0.012, n = 13, ACC : 97.37%
+# Thresh=0.017, n = 12, ACC : 97.37%
+# Thresh=0.018, n = 11, ACC : 98.25%
+# Thresh=0.019, n = 10, ACC : 97.37%
+# Thresh=0.022, n = 9, ACC : 98.25%
+# Thresh=0.027, n = 8, ACC : 97.37%
+# Thresh=0.035, n = 7, ACC : 98.25%
+# Thresh=0.036, n = 6, ACC : 97.37%
+# Thresh=0.036, n = 5, ACC : 97.37%
+# Thresh=0.044, n = 4, ACC : 96.49%
+# Thresh=0.141, n = 3, ACC : 96.49%
+# Thresh=0.160, n = 2, ACC : 94.74%
+# Thresh=0.353, n = 1, ACC : 89.47%
 
 '''
 from xgboost import XGBRegressor, XGBClassifier, plot_importance # 중요한걸 그리겠네
