@@ -1,4 +1,4 @@
-# pipeline
+# pipeline : 데이터 처리 컴포넌트들이 연속되어 있는 것
 
 import pandas as pd
 import numpy as np

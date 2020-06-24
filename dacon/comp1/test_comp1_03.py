@@ -4,11 +4,26 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt  
-from sklearn.model_selection import train_test_split 
-from sklearn.preprocessing import MinMaxScaler, StandardScaler
+from sklearn.model_selection import train_test_split, GridSearchCV, RandomizedSearchCV 
+from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler
 from sklearn.decomposition import PCA
+from keras.models import Sequential, Model
+from keras.layers import Dense, Dropout, Input
+from xgboost import XGBRegressor, plot_importance
+from sklearn.pipeline import Pipeline, make_pipeline
+from sklearn.multioutput import MultiOutputRegressor
+from sklearn.metrics import r2_score, mean_absolute_error
+from sklearn.feature_selection import SelectFromModel
+from keras.wrappers.scikit_learn import KerasRegressor
+from scipy.interpolate import interp1d
+from keras.layers import LeakyReLU
+import pickle 
+
 from keras.callbacks import EarlyStopping
+
 es = EarlyStopping(monitor = 'val_loss', mode = 'min', patience = 10)
+
+leaky = LeakyReLU(alpha = 0.2)
 
 train = pd.read_csv('./dacon/comp1/train.csv', header=0, index_col=0)
 test = pd.read_csv('./dacon/comp1/test.csv', header=0, index_col=0)
@@ -17,6 +32,7 @@ submission = pd.read_csv('./dacon/comp1/sample_submission.csv', header=0, index_
 print('train.shape : ', train.shape)  # (10000, 75) : x_train, x_test
 print('test.shape : ', test.shape)   # (10000, 71) : x_predict
 print('submission.shape : ', submission.shape)  # (10000, 4) : y_predict
+
 
 # 결측치 제거
 print(train.isnull().sum())
@@ -102,61 +118,23 @@ from sklearn.metrics import accuracy_score
 from sklearn.utils.testing import all_estimators
 import warnings
 
-model = Sequential()
-
-model.add(Dense(28, input_shape= (71, ),
-                activation = 'relu'))
-model.add(Dropout(rate = 0.2))
-
-model.add(Dense(10, activation = 'relu'))
-model.add(Dense(5, activation = 'relu'))
-model.add(Dropout(rate = 0.20))
-
-model.add(Dense(9, activation = 'relu'))
-model.add(Dense(15, activation = 'relu'))
-model.add(Dropout(rate = 0.8))
-
-model.add(Dense(10, activation = 'relu'))
-model.add(Dense(7, activation = 'relu'))
-model.add(Dropout(rate = 0.8))
-
-model.add(Dense(3, activation = 'relu'))
-model.add(Dense(2, activation = 'relu'))
-model.add(Dropout(rate = 0.15))
-
-model.add(Dense(6, activation = 'relu'))
-model.add(Dropout(rate = 0.5))
-
-model.add(Dense(5, activation = 'relu'))
-model.add(Dropout(rate = 0.2))
-
-model.add(Dense(4, activation = 'relu'))
-
-model.summary()
-
-warnings.filterwarnings('ignore')
+model =  XGBRegressor(n_estimators=1000, learning_rate=0.1)
+              
+model.fit(x_train, y_train, verbose=True, eval_metric='error',
+                eval_set=[(x_train, y_train), (x_test, y_test)])
 
 
-# 3. 컴파일 및 훈련
-model.compile(loss ='mae', optimizer = 'adam', metrics = ['mae'])
-model.fit(x_train, y_train, epochs = 1500,
-         batch_size = 40, validation_split = 0.2,
-         callbacks = [es])  
-         
+result = model.evals_result()
+# print("eval's results :", result)
 
-#4. 평가와 예측
-loss,mae = model.evaluate(x_test,y_test) 
-print('mae 는', mae)
+y_pred = model.predict(x_test)
 
-test = test.values  # 넘파이 형식으로 변환
-y_predict = model.predict(test)
-print(y_predict)
-'''
-y_predict = pd.DataFrame(y_predict) # 판다스로 변환해서,csv로 저장
-print(type(y_predict))
-# print(x_predict)
-'''
-####### 추가 #####
+# print(multi_XGB.estimators_[0].feature_importances_)
+# print(multi_XGB.estimators_[1].feature_importances_)
+# print(multi_XGB.estimators_[2].feature_importances_)
+# print(multi_XGB.estimators_[3].feature_importances_)
+
+    
 from pandas import Series, DataFrame
 import numpy as np
 import pandas as pd
@@ -179,16 +157,58 @@ print(77.0 * 1.5)
 b3 = outliers(a3)
 print(b3)
 
+multi_XGB = XGBRegressor(multi_XGB.estimators_)
+
+for i in range(len(multi_XGB.estimators_)):
+    threshold = np.sort(multi_XGB.estimators_[i].feature_importances_)[18:]
+    print(threshold)
+    
+
+    for thres in threshold:
+        selection = SelectFromModel(multi_XGB.estimators_[i], threshold = thres, prefit = True)
+        
+        select_x_train = selection.transform(x_train)
+        select_x_test = selection.transform(x_test)
+        select_x_pred = selection.transform(x_pred)
+        print(select_x_train.shape[1])
+        
+        parameter = {
+            'n_estimators': [100, 200, 400],
+            'learning_rate' : [0.05, 0.07, 0.1],
+            'colsample_bytree': [ 0.7, 0.8, 0.9],
+            'colsample_bylevel':[ 0.7, 0.8, 0.9],
+            'max_depth': [4, 5, 6]
+        }
+        # search = RandomizedSearchCV( XGBRegressor(gpu_id = 0, tree_method = 'gpu_hist'), parameter, cv =5)
+        search = RandomizedSearchCV( XGBRegressor(), parameter, cv =5)
+        multi_search = MultiOutputRegressor(search,n_jobs = -1)
+        
+        multi_search.fit(select_x_train, y_train )
+        
+        y_pred = multi_search.predict(select_x_test)
+        mae = mean_absolute_error(y_test, y_pred)
+        score =r2_score(y_test, y_pred)
+        print("Thresh=%.3f, n = %d, R2 : %.2f%%, MAE : %.3f"%(thres, select_x_train.shape[1], score*100.0, mae))
+        
+        y_predict = multi_search.predict(select_x_pred)
+
+        # submission
+        a = np.arange(10000,20000)
+        submission = pd.DataFrame(y_predict, a)
+        submission.to_csv('./dacon/select_XGB03_%i_%.5f.csv'%(i, mae),index = True, header=['hhb','hbo2','ca','na'],index_label='id')
+
+
+
 ###############
 
-y_predict = pd.DataFrame({
-  'id' : np.array(range(10000, 20000)),
-  'hhb': y_predict[:,0],
-  'hbo2': y_predict[:, 1],
-  'ca': y_predict[:, 2],
-  'na':y_predict[:, 3]
-})
-y_predict.to_csv('./dacon/sample_submission.csv', index = False )
+# y_predict = pd.DataFrame({
+#   'id' : np.array(range(10000, 20000)),
+#   'hhb': y_predict[:,0],
+#   'hbo2': y_predict[:, 1],
+#   'ca': y_predict[:, 2],
+#   'na':y_predict[:, 3]
+# })
+# y_predict.to_csv('./dacon/sample_submission.csv', index = False )
 
 
 # 서브밋파일 만든다.

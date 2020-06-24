@@ -104,30 +104,22 @@ import warnings
 
 model = Sequential()
 
-model.add(Dense(128, input_shape= (71, ),
+model.add(Dense(2, input_shape= (71, ),
                 activation = 'relu'))
 model.add(Dropout(rate = 0.2))
 
-model.add(Dense(100, activation = 'relu'))
-model.add(Dense(25, activation = 'relu'))
+
+model.add(Dense(5, activation = 'relu'))
 model.add(Dropout(rate = 0.20))
 
-model.add(Dense(800, activation = 'relu'))
-model.add(Dense(250, activation = 'relu'))
-model.add(Dropout(rate = 0.8))
-
-model.add(Dense(1000, activation = 'relu'))
-model.add(Dense(550, activation = 'relu'))
-model.add(Dropout(rate = 0.8))
-
-model.add(Dense(30, activation = 'relu'))
-model.add(Dense(12, activation = 'relu'))
+model.add(Dense(3, activation = 'relu'))
+model.add(Dense(2, activation = 'relu'))
 model.add(Dropout(rate = 0.15))
 
-model.add(Dense(30, activation = 'relu'))
+model.add(Dense(6, activation = 'relu'))
 model.add(Dropout(rate = 0.5))
 
-model.add(Dense(15, activation = 'relu'))
+model.add(Dense(5, activation = 'relu'))
 model.add(Dropout(rate = 0.2))
 
 model.add(Dense(4, activation = 'relu'))
@@ -139,8 +131,8 @@ warnings.filterwarnings('ignore')
 
 # 3. 컴파일 및 훈련
 model.compile(loss ='mae', optimizer = 'adam', metrics = ['mae'])
-model.fit(x_train, y_train, epochs = 1500,
-         batch_size = 40, validation_split = 0.2,
+model.fit(x_train, y_train, epochs = 100,
+         batch_size = 20, validation_split = 0.2,
          callbacks = [es])  
          
 
