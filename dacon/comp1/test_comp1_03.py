@@ -110,11 +110,12 @@ y_test_pred = search.predict(x_test)
 print("R2 :", r2_score(y_test,y_test_pred))
 print("mae :", mae(y_test,y_test_pred))
 
-############  위에 부분까지는 나옴 ##############
+############################################################
 
-x_train = x_train.values
-x_test= x_test.values
-y_train = y_train.values
+
+# x_train = x_train.values
+# x_test= x_test.values
+# y_train = y_train.values
 
 y_pred = search.predict(x_pred)
 
