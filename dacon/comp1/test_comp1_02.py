@@ -48,6 +48,7 @@ np.save('./dacon/y_data', arr = y)
 # numpy 데이터 로드
 x = np.load('./dacon/x_data.npy')
 y = np.load('./dacon/y_data.npy')
+
 print(x.shape)          # (10000, 71)
 print(y.shape)          # (10000, 4)
 
