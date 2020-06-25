@@ -1,139 +1,117 @@
-
-# 회귀모델이다.
-
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt  
-from sklearn.model_selection import train_test_split, RandomizedSearchCV, KFold 
+from sklearn.feature_selection import SelectFromModel
+from sklearn.metrics import r2_score, mean_absolute_error as MAE
+from sklearn.model_selection import train_test_split, RandomizedSearchCV, GridSearchCV, KFold
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, MaxAbsScaler, RobustScaler
-from sklearn.decomposition import PCA
 from xgboost import XGBRegressor
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.multioutput import MultiOutputRegressor
-from sklearn.metrics import mean_absolute_error as mae, r2_score
-from keras.callbacks import EarlyStopping
 
-es = EarlyStopping(monitor = 'val_loss', mode = 'min', patience = 10)
+test = pd.read_csv('./dacon/comp1/test.csv', sep=',', header = 0, index_col = 0)
 
-x_train = pd.read_csv('./dacon/comp1/train.csv', header=0, index_col=0)
-y_train = pd.read_csv('./dacon/comp1/test.csv', header=0, index_col=0)
-x_pred = pd.read_csv('./dacon/comp1/sample_submission.csv', header=0, index_col=0)
+x_train = np.load('./dacon/comp1/x_train.npy')
+y_train = np.load('./dacon/comp1/y_train.npy')
+x_pred = np.load('./dacon/comp1/x_pred.npy')
 
-print('x_train.shape : ', x_train.shape)  # (10000, 75) : x_train, x_test
-print('y_train.shape : ', y_train.shape)   # (10000, 71) : x_predict
-print('x_pred.shape : ', x_pred.shape)  # (10000, 4) : y_predict
-
-# 결측치 제거
-print(x_train.isnull().sum())
-
-x_train = x_train.interpolate()  # 보간법- 선형보간
-print(x_train.isnull().sum())
-
-y_train = y_train.interpolate()  
-print(y_train.isnull().sum())
-
-##########################################
-
-x_train = x_train.fillna(method='bfill') 
-y_train = y_train.fillna(method='bfill')
-
-print(y_train.isnull().sum())
-print("=" * 40)
-print(x_train.isnull().sum())
-print(y_train.isnull().sum())
-
-x_train = x_train.iloc[:, :71]
-y_train = y_train.iloc[:, 71:]
-
-print(x_train.shape)          
-print(y_train.shape)         
-
-
-np.save('./dacon/x_data', arr = x_train)
-np.save('./dacon/y_data', arr = y_train)
-np.save('./dacon/y_data', arr = x_pred )
-
-
-# numpy 데이터 로드
-x_train = np.load('./dacon/x_data.npy')
-y_train = np.load('./dacon/y_data.npy')
-x_pred  = np.load('./dacon/y_data.npy')
-
-print(x_train.shape)          
-print(y_train.shape)         
-print(x_pred .shape)          
-
-
-# 데이터 나누기
 x_train, x_test, y_train, y_test = train_test_split(
-    x_train, y_train, random_state = 1,
-    train_size = 0.75, shuffle = True)
-print(x_train.shape)        # (8000, 71)
-print(x_test.shape)         # (2000, 71)
-print(y_train.shape)        # (8000, 4)
-print(y_test.shape)         # (2000, 4)
+    x_train, y_train, train_size = 0.8, random_state = 66
+)
+print(x_train.shape)
+print(y_train.shape)
+# print(x_test.shape)
 
-
-from sklearn.preprocessing import StandardScaler, RobustScaler
-from sklearn.preprocessing import MinMaxScaler, MaxAbsScaler
-
-# scaler = StandardScaler()
-scaler = RobustScaler()
-# scaler = MinMaxScaler()
-scaler.fit(x_train)
-x_train = scaler.transform(x_train)
-x_test = scaler.transform(x_test)
-print(x_train[0])
-print(x_test[0])
-
-
-# 2. 모델
-
-parameters =[
+# 2. model
+final_y_test_pred = []
+final_y_pred = []
+parameter = [
     {'n_estimators': [1000],
-    'learning_rate': [0.025],
-    'colsample_bylevel': [0.75],
-    'eval_metric': ['mae'],
-    'max_depth': [6]
-    }
+    'learning_rate': [0.045,0.055,0.065,0.075,0.085],
+    'max_depth': [5,6,7]},
+    {'n_estimators': [1000],
+    'learning_rate': [0.045,0.055,0.065,0.075,0.085],
+    'colsample_bytree':[0.6,0.65,0.7,0.75,0.8,0.85],
+    'max_depth': [5,6,7]},
+    {'n_estimators': [1000],
+    'learning_rate': [0.045,0.055,0.065,0.075,0.085],
+    'colsample_bylevel': [0.6,0.65,0.7,0.75,0.8,0.85],
+    'max_depth': [5,6,7]}
 ]
+# parameter =[
+#     {'n_estimators': [500],
+#     'learning_rate': [0.075],
+#     'colsample_bylevel': [0.75],
+#     'max_depth': [6]},
+#     {'n_estimators': [500],
+#     'learning_rate': [0.075],
+#     'colsample_bytree': [0.75],
+#     'max_depth': [6]},
+#     {'n_estimators': [500],
+#     'learning_rate': [0.075],
+#     'max_depth': [6]}
+# ]
+
+settings = {
+    'verbose': False,
+    'eval_metric': ['logloss','mae'],
+    'eval_set' : [(x_train, y_train), (x_test,y_test)],
+    # 'early_stopping_rounds' : 30
+}
+
 kfold = KFold(n_splits=5, shuffle=True, random_state=66)
-search = RandomizedSearchCV(XGBRegressor(), parameters, cv = kfold, n_iter=1, n_jobs=-1)
-search = MultiOutputRegressor(search)
 
-search.fit(x_train, y_train)
+# 모델 컬럼별 4번
+for i in range(4):
+    model = XGBRegressor()
+    settings['eval_set'] = [(x_train, y_train), (x_test,y_test)]
+    model.fit(x_train,y_train[:,i], **settings)
+    y_test_pred = model.predict(x_test)
+    score = model.score(x_test,y_test[:,i])
+    mae = MAE(y_test[:,i], y_test_pred)
+    print("r2 : ", score)
+    print("mae :", mae)
+    thresholds = np.sort(model.feature_importances_)[[i for i in range(0,176,35)]]
+    print(thresholds)
+    best_mae = mae
+    best_model = model
+    best_y_pred = model.predict(x_pred)
+    best_y_test_pred = y_test_pred
+    print(best_y_pred.shape)
+    for thresh in thresholds:
+        selection = SelectFromModel(model, threshold=thresh, prefit=True)
+                                                # median 이 둘중 하나 쓰는거 이해하면 사용 가능
+                                                ## 이거 주어준 값 이하의 중요도를 가진 feature를 전부 자르는 파라미터
+        select_x_train = selection.transform(x_train)
+        select_x_test = selection.transform(x_test)
+        select_x_pred = selection.transform(x_pred)
 
-print(search.estimators_)
-y_test_pred = search.predict(x_test)
+        print(select_x_train.shape)
 
-# print(search.best_params_)
-print("R2 :", r2_score(y_test,y_test_pred))
-print("mae :", mae(y_test,y_test_pred))
+        selection_model = RandomizedSearchCV(XGBRegressor(), parameter, n_jobs=-1, cv = kfold,n_iter=10)
+        settings['eval_set'] = [(select_x_train, y_train), (select_x_test,y_test)]
+        selection_model.fit(select_x_train, y_train[:,i], **settings)
 
-############################################################
+        y_pred = selection_model.predict(select_x_test)
+        r2 = r2_score(y_test[:,i],y_pred)
+        mae = MAE(y_test[:,i],y_pred)
+        print(selection_model.best_params_)
+        if mae <= best_mae:
+            print("예아~")
+            best_mae = mae
+            best_model = selection_model
+            best_y_pred = selection_model.predict(select_x_pred)
+            best_y_test_pred = y_pred
+        print("Thresh=%.3f, n=%d, MAE: %.5f" %(thresh, select_x_train.shape[1], mae))
+    final_y_pred.append(best_y_pred)
+    final_y_test_pred.append(best_y_test_pred)
 
+print('MAE :', MAE(y_test, np.array(final_y_test_pred).T))
 
-# x_train = x_train.values
-# x_test= x_test.values
-# y_train = y_train.values
-
-y_pred = search.predict(x_pred)
-
+final_y_pred = np.array(final_y_pred)
 submissions = pd.DataFrame({
-    'id' : np.array(range(10000, 20000)),
-    "hhb": y_pred[:,0],
-    "hbo2": y_pred[:,1],
-    "ca": y_pred[:,2],
-    "na": y_pred[:,3]
+    "id": test.index,
+    "hhb": final_y_pred[0,:],
+    "hbo2": final_y_pred[1,:],
+    "ca": final_y_pred[2,:],
+    "na": final_y_pred[3,:]
 })
 
 submissions.to_csv('./dacon/comp1/comp1_sub.csv', index = False)
-
-
-# 서브밋파일 만든다.
-# .to_csv(경로)
-# 제출
-
-
-
-
