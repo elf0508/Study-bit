@@ -56,11 +56,14 @@ model.add(Dense(1))
 
 model.summary()
 
-'''
+
 #3. 설명한 후 훈련
 from keras.callbacks import EarlyStopping
+
 early_stopping = EarlyStopping(monitor='loss', patience=5, mode='auto') 
+
 model.compile(loss='mse', optimizer='adam', metrics=['mse'])
+
 model.fit(x_train,y_train, epochs=50, batch_size=5, callbacks=[early_stopping], validation_split=0.2)  
 
 #4. 평가와 예측
@@ -81,3 +84,15 @@ r2 = r2_score(x_predict_y, x_predict)
 print('R2는 ', r2)
 
 '''
+mse 는 0.06292356550693512
+[[ 95.27078]
+ [ 96.27556]
+ [ 97.28035]
+ [ 98.28511]
+ [ 99.28988]
+ [100.29467]]
+RMSE 는 0.28284264987309676
+R2는  0.972571440712948
+
+'''
+

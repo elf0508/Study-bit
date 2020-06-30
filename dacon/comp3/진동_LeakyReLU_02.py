@@ -49,7 +49,7 @@ import matplotlib.pyplot as plt
 
 import keras
 from keras.models import Sequential
-from keras.layers import Dense, Activation, Conv2D, Flatten, MaxPooling2D, BatchNormalization, Lambda, AveragePooling2D
+from keras.layers import Dense, Activation, Conv2D, Flatten,MaxPooling2D,BatchNormalization,Lambda, AveragePooling2D
 import keras.backend as K
 from keras.callbacks import ModelCheckpoint
 from keras.models import load_model
@@ -128,32 +128,32 @@ def set_model(train_target):  # 0:x,y, 1:m, 2:v
     fs = (3,1)
 
     model.add(Conv2D(nf,fs, padding=padding, input_shape=(375,5,1)))
-    model.add(LeakyReLU(alpha=0.1))
+    model.add(LeakyReLU(alpha=0.2))
     model.add(BatchNormalization())
     model.add(MaxPooling2D(pool_size=(2, 1)))
 
     model.add(Conv2D(nf*2,fs, padding=padding))
-    model.add(LeakyReLU(alpha=0.1))
+    model.add(LeakyReLU(alpha=0.2))
     model.add(BatchNormalization())
     model.add(MaxPooling2D(pool_size=(2, 1)))
 
     model.add(Conv2D(nf*4,fs, padding=padding))
-    model.add(LeakyReLU(alpha=0.1))
+    model.add(LeakyReLU(alpha=0.2))
     model.add(BatchNormalization())
     model.add(MaxPooling2D(pool_size=(2, 1)))
 
     model.add(Conv2D(nf*8,fs, padding=padding))
-    model.add(LeakyReLU(alpha=0.1))
+    model.add(LeakyReLU(alpha=0.2))
     model.add(BatchNormalization())
     model.add(MaxPooling2D(pool_size=(2, 1)))
 
     model.add(Conv2D(nf*16,fs, padding=padding))
-    model.add(LeakyReLU(alpha=0.1))
+    model.add(LeakyReLU(alpha=0.2))
     model.add(BatchNormalization())
     model.add(MaxPooling2D(pool_size=(2, 1)))
 
     model.add(Conv2D(nf*32,fs, padding=padding))
-    model.add(LeakyReLU(alpha=0.1))
+    model.add(LeakyReLU(alpha=0.2))
     model.add(BatchNormalization())
     model.add(MaxPooling2D(pool_size=(2, 1)))
 

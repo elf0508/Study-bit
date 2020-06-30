@@ -15,11 +15,15 @@ from keras.layers import Input, Dropout, Conv2D, Flatten, Dense, MaxPool2D
 
 # 1.데이터
 dataset = load_iris()
+
 x = dataset.data   
 y = dataset.target 
+
 x_train, x_test, y_train, y_test = train_test_split(x,y, test_size=0.2, random_state=43)
+
 y_train = np_utils.to_categorical(y_train)
 y_test = np_utils.to_categorical(y_test)
+
 print(x_train.shape)
 print(x_test.shape)  
 print(y_train.shape) 
@@ -28,14 +32,18 @@ print(y_test.shape)
 # 2.모델
 def build_model(optimizer='adam') :
     input = Input(shape=(4,))
+
     x = Dense(512, activation='relu')(input)
     x = Dropout(0.5)(x)
     x = Dense(256, activation='relu')(x)
     x = Dropout(0.5)(x)
     x = Dense(128, activation='relu')(x)
     x = Dropout(0.5)(x)
+
     output = Dense(3, activation='softmax')(x)
+
     model = Model(inputs=input, outputs=output)
+
     model.compile(optimizer=optimizer, loss='categorical_crossentropy', metrics=['acc'])
     return model
     
@@ -47,6 +55,7 @@ def create_hyperparameters() :
     return {'model__batch_size': batches, "model__optimizer": optimizers}
 
 from keras.wrappers.scikit_learn import KerasClassifier, KerasRegressor 
+
 model = KerasClassifier(build_fn=build_model, verbose=1)
 hyperparameters = create_hyperparameters()
 
@@ -56,6 +65,7 @@ from sklearn.preprocessing import MinMaxScaler, StandardScaler
 pipe = Pipeline([("scaler",StandardScaler()),('model', model)]) 
 
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
+
 search = RandomizedSearchCV(pipe, hyperparameters, cv=3) 
 
 # 그리드서치 자체를 fit 때려버리네?
