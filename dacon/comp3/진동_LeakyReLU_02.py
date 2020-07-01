@@ -128,32 +128,32 @@ def set_model(train_target):  # 0:x,y, 1:m, 2:v
     fs = (3,1)
 
     model.add(Conv2D(nf,fs, padding=padding, input_shape=(375,5,1)))
-    model.add(LeakyReLU(alpha=0.2))
+    model.add(LeakyReLU(alpha=0.5))
     model.add(BatchNormalization())
     model.add(MaxPooling2D(pool_size=(2, 1)))
 
     model.add(Conv2D(nf*2,fs, padding=padding))
-    model.add(LeakyReLU(alpha=0.2))
+    model.add(LeakyReLU(alpha=0.5))
     model.add(BatchNormalization())
     model.add(MaxPooling2D(pool_size=(2, 1)))
 
     model.add(Conv2D(nf*4,fs, padding=padding))
-    model.add(LeakyReLU(alpha=0.2))
+    model.add(LeakyReLU(alpha=0.5))
     model.add(BatchNormalization())
     model.add(MaxPooling2D(pool_size=(2, 1)))
 
     model.add(Conv2D(nf*8,fs, padding=padding))
-    model.add(LeakyReLU(alpha=0.2))
+    model.add(LeakyReLU(alpha=0.5))
     model.add(BatchNormalization())
     model.add(MaxPooling2D(pool_size=(2, 1)))
 
     model.add(Conv2D(nf*16,fs, padding=padding))
-    model.add(LeakyReLU(alpha=0.2))
+    model.add(LeakyReLU(alpha=0.5))
     model.add(BatchNormalization())
     model.add(MaxPooling2D(pool_size=(2, 1)))
 
     model.add(Conv2D(nf*32,fs, padding=padding))
-    model.add(LeakyReLU(alpha=0.2))
+    model.add(LeakyReLU(alpha=0.5))
     model.add(BatchNormalization())
     model.add(MaxPooling2D(pool_size=(2, 1)))
 
@@ -316,4 +316,5 @@ for train_target in range(3):
     elif train_target == 2: # v 학습
         submit.iloc[:,4] = pred_data_test[:,3]
 
-submit.to_csv('./comp3_submit.csv', index = False)
+submit.to_csv('./data/dacon/comp3/comp3_submit.csv', index = False)
+# submit.to_csv('./comp3_submit.csv', index = False)

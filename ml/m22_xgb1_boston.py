@@ -24,7 +24,7 @@ x_train, x_test, y_train, y_test = train_test_split(x, y, train_size = 0.8,
 
 
 # XGB 필수 파라미터 ##
-n_estimators = 10000        #나무 100개/ decision tree보다 100배 느려
+n_estimators = 10000       # 나무 100개/ decision tree보다 100배 느려
 learning_rate = 0.001      # 학습률 디폴트 값/ 상당히 중요하다
 colsample_bytree = 0.9
 colsample_bylevel = 0.6   # 0.6~0.9
