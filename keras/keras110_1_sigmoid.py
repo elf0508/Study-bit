@@ -4,6 +4,8 @@
 
 # 함수 설명 사이트 : https://ratsgo.github.io/deep%20learning/2017/04/22/NNtricks/
 
+# 함수 설명 사이트 : https://da-nika.tistory.com/43
+
 import numpy as np
 import matplotlib.pyplot as plt
 
