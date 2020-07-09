@@ -1,28 +1,24 @@
-# sigmoid
+# 이진분류 / sigmoid 사용
 
 import tensorflow as tf
+import numpy as np
 
 tf.set_random_seed(777)
 
-x_data = [[1, 2],
-           [2, 3],
-           [3, 1],
-           [4, 3],
-           [5, 3],
-           [6, 2]]  
+x_data = np.array([[0, 0], [0, 1], [1, 0], [1, 1]], dtype = np.float32)
 
 with tf.Session():
-    print(tf.shape(x_data).eval())  # [6 2]
+    print(tf.shape(x_data).eval()) # [4 2]
 
-y_data = [[0],
-          [0],
-          [0],
-          [1],
-          [1],
-          [1]]
+y_data = np.array([[0], [1], [1], [0]], dtype = np.float32)
 
 with tf.Session():
-    print(tf.shape(y_data).eval())   # [6 1]
+    print(tf.shape(y_data).eval())  # [4 1]
+
+
+# x, y, w, b, hypothesis, cost, train(optimizer)
+# 이진분류 / sigmoid 사용
+# predict / accuracy 준비해둘것
 
 
 x = tf.placeholder(tf.float32, shape = [None, 2])
@@ -34,21 +30,6 @@ b = tf.Variable(tf.random_normal([1]), name = 'bias')
 
 hypothesis = tf.sigmoid(tf.matmul(x, w) + b)  
 
-
-# cost = tf.reduce_mean(tf.square(hypothesis - y))
-
-# 시그모이드를 직접 구현한 함수
-# sigmoid = tf.compat.v1.div(1., 1. + tf.compat.v1.exp(tf.matmul(x, w)))
-
-
-# 2. Cost function 최소화
-
-#cost function(logistic regression에서, W와 b를 찾기 위한 cost)
-
-# 시그모이드에서 앞에 마이너스가 붙는 이유는 음수가 안나오게 하기 위해서
-# 로그안에 들어가는 x값이 sigmoid를 거치기때문에
-# 무조건 0~1사이라서 모든 값이 음수가 나온다.
-# 음수 싫으면 출력할때 -cost 이렇게 출력한다.
 
 cost = -tf.reduce_mean(y * tf.log(hypothesis) + (1 - y) * 
                         tf.log(1 - hypothesis))
@@ -76,4 +57,3 @@ with tf.Session() as sess:
 
     print("\n Hypothesis : ", h, "\n Correct (y) : ", c,
             "\n Accuracy : ", a)
-

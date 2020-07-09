@@ -25,8 +25,13 @@ cost =  tf.reduce_mean(tf.square( hypothesis - y))
 
 optimizer = tf.train.GradientDescentOptimizer(learning_rate= 1e-6) # 0.00001
 
-
 train = optimizer.minimize(cost)
+
+# 준비 상태
+predicted = tf.cast(hypothesis > 0.5, dtype = tf.float32)
+accuracy = tf.reduce_mean(tf.cast(tf.equal(predicted, y),
+                            dtype = tf.float32))
+
 
 sess = tf.Session()
 sess.run(tf.global_variables_initializer())
@@ -37,3 +42,10 @@ for step in range(2001):
 
     if step % 20 == 0 :
         print(step, 'cost :',cost_val, '\n 예측값 :', hy_val)
+
+# 실제 실행 되는 곳
+    h, c, a = sess.run([hypothesis, predicted, accuracy],
+                            feed_dict={x : x_data, y : y_data})
+
+    print("\n Hypothesis : ", h, "\n Correct (y) : ", c,
+            "\n Accuracy : ", a)
