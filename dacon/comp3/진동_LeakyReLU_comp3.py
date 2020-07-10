@@ -157,13 +157,19 @@ def set_model(train_target):  # 0:x,y, 1:m, 2:v
     model.add(BatchNormalization())
     model.add(MaxPooling2D(pool_size=(2, 1)))
 
+
     model.add(Flatten())
     model.add(Dense(256))
     model.add(Dense(128))
+    model.add(Dense(100))
     model.add(Dense(64))
-    model.add(Dense(32))
-    model.add(Dense(16))
+    model.add(Dense(40))
+    model.add(Dense(11))
+    # model.add(Dense(32))
+    # model.add(Dense(16))
+    model.add(Dense(10))
     model.add(Dense(8))
+    model.add(Dense(3))
     # model.add(LeakyReLU(alpha=leaky_relu_alpha))
 
     model.add(Dense(4))
@@ -316,4 +322,4 @@ for train_target in range(3):
     elif train_target == 2: # v 학습
         submit.iloc[:,4] = pred_data_test[:,3]
 
-submit.to_csv('./comp3_submit.csv', index = False)
+submit.to_csv('./data/dacon/comp3_submit.csv', index = False)
