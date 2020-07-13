@@ -1,3 +1,4 @@
+# 분류
 # RNN - 수치로 구현해보기 / 3차원
 
 import tensorflow as tf
