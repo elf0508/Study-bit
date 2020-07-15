@@ -9,3 +9,4 @@
 *.json
 *.html
 *.db
+*.pyc
