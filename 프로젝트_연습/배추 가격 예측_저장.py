@@ -70,11 +70,61 @@ for step in range(100001):
 
 # 학습된 모델을 저장.
 
-# saver = tf.train.Saver()
+saver = tf.train.Saver()
 
-# save_path = saver.save(sess, "./saved.cpkt")
+save_path = saver.save(sess, "./saved.cpkt")
 
-# print('학습된 모델을 저장했습니다.')
+print('학습된 모델을 저장했습니다.')
+
+
+
+# 플레이스홀더를 설정한다.
+
+X = tf.placeholder(tf.float32, shape=[None, 4])
+
+Y = tf.placeholder(tf.float32, shape=[None, 1])
+
+W = tf.Variable(tf.random_normal([4, 1]), name="weight")
+
+b = tf.Variable(tf.random_normal([1]), name="bias")
+
+# 가설 설정
+
+hypothesis = tf.matmul(X, W) + b
+
+# 저장된 모델을 입력 받습니다.
+saver = tf.train.Saver()
+model = tf.global_variables_initialier()
+
+# 4가지 변수를 입력 받습니다.
+avg_temp = float(input('평균 온도 : '))
+min_temp = float(input('최저 온도 : '))
+max_temp = float(input('최고 온도 : '))
+rain_fall = float(input('강수량 : ' ))
+
+with tf.Session() as sess:
+    sess.run(model)
+
+    # 저장된 학습 모델을 파일로부터 불러온다.
+    save_path = "./saved.cpkt"
+    saver.restore(sess, save_path)
+
+    # 사용자의 입력 값을 이용해 배열을 만든다.
+    data = ((avg_temp, min_temp, max_temp, rain_fall),)
+    arr = np.arr(data, dtype = np.float32)
+
+    # 예측을 수행한 뒤에 그 결과를 출력
+    x_data = arr[0:4]
+    dict = sess.run(hypothesis, feed_dict = {X : x_data})
+
+    print(dict[0])
+
+    
+
+
+
+
+
 
 
 
