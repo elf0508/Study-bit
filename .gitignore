@@ -19,7 +19,7 @@
 *.mp3
 *.bz2
 *.h
-*.blib
+*.dlib
 *.bridge.h
 *.md
 *.java
