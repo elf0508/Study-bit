@@ -31,3 +31,5 @@
 *.vector
 *.in
 *.js
+*.exe
+*.tar.xz
