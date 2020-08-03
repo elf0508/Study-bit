@@ -33,3 +33,9 @@
 *.js
 *.exe
 *.tar.xz
+YOLOV4/*
+data/opencv/*
+*.DS_Store
+*.sqlite
+.vs/*
+*.npy
