@@ -443,7 +443,7 @@ plt.show()
 colors = ("r","g","b") # 각 컬러 채널에 대한 히스토그램을 계산
 # 컬러 채널을 반복하면서 히스토그램을 계산하고 그래프를 그립니다.
 for i, channel in enumerate(colors):
-    histogram = cv2.calcHist([image_rgb], # 이미지
+    histogram = cv2.calcHist([img_C7_rgb], # 이미지
                              [i], # 채널 인덱스
                              None, # 마스크 없음
                              [256], # 히스토그램 크기
