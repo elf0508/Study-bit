@@ -1,3 +1,5 @@
+# https://ivo-lee.tistory.com/91
+
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
