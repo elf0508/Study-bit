@@ -39,6 +39,6 @@ data/opencv/*
 *.sqlite
 .vs/*
 *.npy
-.main.ipynb/*
-.data.npy/*
-.video.py/*
+main.ipynb/*
+data.npy/*
+video.py/*
