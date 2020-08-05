@@ -18,11 +18,14 @@ print(np.size(x, 1))          # 열의 개수 구하기
 
 # scatter graph
 import matplotlib.pyplot as plt
+
 plt.figure(figsize = (20, 10))
+
 for i in range(np.size(x, 1)):
     plt.subplot(2, 5, i+1)
     plt.scatter(x[:, i], y)
     plt.title(diabetes.feature_names[i])
+
 plt.xlabel('columns')
 plt.ylabel('target')
 plt.axis('equal')
@@ -35,6 +38,7 @@ plt.show()
 #'Sex' one hot encoding
 x_max = np.max(x[:, 1])   
 x_min = np.min(x[:, 1])
+
 print(x_max)                   # 0.0506801187398187
 print(x_min)                  # -0.044641636506989
 
@@ -54,12 +58,14 @@ for i in range(np.size(x, 0)):
 
 # scaler
 from sklearn.preprocessing import MinMaxScaler
+
 scaler = MinMaxScaler()
 scaler.fit(x)
 x = scaler.transform(x)
 
 
 from sklearn.model_selection import train_test_split
+
 x_train, x_test, y_train, y_test = train_test_split(x, y, random_state =100, 
                                                   train_size = 0.8)
 
@@ -80,6 +86,7 @@ x_test2 = x_test2.reshape(x_test2.shape[0],3, 2, 1)
 #2. model
 from keras.models import Model
 from keras.layers import Dense, Dropout, Input, Conv2D, MaxPooling2D, Flatten
+
 # 1
 input1 = Input(shape = (2, 2, 1))
 dense1 = Conv2D(50, (2, 2),  padding = 'same', activation = 'relu')(input1)
@@ -90,6 +97,7 @@ dense1 = Dropout(0.2)(dense1)
 dense1 = Conv2D(100,(2, 2), padding = 'same',activation = 'relu')(dense1)
 dense1 = Dropout(0.2)(dense1)
 dense1 = Flatten()(dense1)
+
 # 2
 input2 = Input(shape = (3, 2, 1))
 dense2 = Conv2D(100, (2, 2),padding = 'same',activation = 'relu')(input2)
@@ -100,12 +108,15 @@ dense2 = Dropout(0.2)(dense2)
 dense2 = Conv2D(100,(2, 2), padding = 'same',activation = 'relu')(dense2)
 dense2 = Dropout(0.2)(dense2)
 dense2 = Flatten()(dense2)
+
 # merge
 from keras.layers.merge import concatenate  
+
 merge1 = concatenate([dense1, dense2])
 middle1 = Dense(50, activation = 'relu')(merge1)
 middle1 = Dense(50, activation = 'relu')(middle1)
 middle1 = Dense(50, activation = 'relu')(middle1)
+
 # output
 output1 = Dense(1, activation = 'relu')(middle1)
 
@@ -113,11 +124,14 @@ model = Model(inputs = [input1, input2], outputs = output1)
 
 # callbacks
 from keras.callbacks import EarlyStopping, TensorBoard, ModelCheckpoint
+
 # earlystopping
 es = EarlyStopping(monitor = 'val_loss', patience = 50, verbose = 1 )
+
 # tensorboard
 ts_board = TensorBoard(log_dir = 'graph', histogram_freq = 0,
                         write_graph = True, write_images = True)
+
 # modelcheckpotin
 modelpath = './model/{epoch:02d}-{val_loss:.4f}.hdf5'
 ckpoint = ModelCheckpoint(filepath = modelpath, monitor = 'val_loss',
@@ -126,6 +140,7 @@ ckpoint = ModelCheckpoint(filepath = modelpath, monitor = 'val_loss',
 
 #3. complie, fit
 model.compile(loss = 'mse', optimizer = 'adam', metrics = ['mse'])
+
 hist = model.fit([x_train1 ,x_train2] ,y_train, epochs = 500, batch_size = 64,
                 validation_split = 0.2, verbose =2,
                 callbacks = [es])
@@ -151,6 +166,7 @@ print('R2: ', r2)
 
 # graph
 import matplotlib.pyplot as plt
+
 # 1
 plt.subplot(2, 1, 1)
 plt.plot(hist.history['loss'], c= 'cyan', marker = 'o', label = 'loss')
@@ -159,6 +175,7 @@ plt.title('loss')
 plt.xlabel('epoch')
 plt.ylabel('loss')
 plt.legend()
+
 # 2
 plt.subplot(2, 1, 2)
 plt.plot(hist.history['mse'], c= 'cyan', marker = '+', label = 'mse')

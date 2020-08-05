@@ -1,32 +1,39 @@
 # 다중 분류
 from sklearn.datasets import load_iris
+
 iris = load_iris()
 
 x = iris.data
 y = iris.target
+
 print(x.shape)      # (150, 4)
 print(y.shape)      # (150, )
 
 
 # x : scaler
 from sklearn.preprocessing import StandardScaler
+
 scaler = StandardScaler()
 scaler.fit(x)
 x = scaler.transform(x).reshape(150, 2, 2, 1)
 
 # y : one hot encoding
 from keras.utils.np_utils import to_categorical
+
 y = to_categorical(y)
 print(y.shape)          # (150, 3)
 
 from sklearn.model_selection import train_test_split
+
 x_train, x_test, y_train, y_test = train_test_split(x, y, train_size =0.8,random_state= 10)
 
 
 #2. model
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Conv2D, MaxPool2D, Flatten
+
 model = Sequential()
+
 model.add(Conv2D(10, (2, 2), input_shape = (2, 2, 1 ), activation = 'relu', padding = 'same'))
 model.add(Conv2D(50, (2, 2),activation = 'relu', padding = 'same'))
 model.add(Dropout(0.1))
