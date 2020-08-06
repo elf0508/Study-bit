@@ -10,24 +10,16 @@ from tensorflow.keras.layers import Dense, LSTM, Dropout, Conv2D, MaxPooling2D, 
 from tensorflow.keras.callbacks import EarlyStopping, TensorBoard, ModelCheckpoint
 from sklearn.decomposition import PCA
 
-def aidemy_imshow(name, img):
+# def aidemy_imshow(name, img):
 
-    b,g,r = cv2.split(img)
-    img = cv2.merge([r,g,b])
+#     b,g,r = cv2.split(img)
+#     img = cv2.merge([r,g,b])
 
-    plt.imshow(img)
-    plt.show()
-
-cv2.imshow = aidemy_imshow
-
-
-def aidemy_imshow(name, img):
-    b,g,r = cv2.split(img)
-    img = cv2.merge([r,g,b])
-    plt.imshow(img)
-    plt.show()
+#     plt.imshow(img)
+#     plt.show()
 
 # cv2.imshow = aidemy_imshow
+
 
 # OpenCV의 imread를 사용하여 전처리를 위한 이미지를 로드할 수 있다.
 # imread() : 이미지를 넘파이 배열(행렬)로 변환한다. 행렬의 각 원소는 개별 픽셀에 해당한다.
@@ -47,7 +39,7 @@ img_C7_bgr = cv2.imread('T_project/file/L4.jpg/C7.jpg', cv2.IMREAD_COLOR)
 px = img_C7_bgr[100, 100]
 print(px)       # [6 4 3]
 
-img_C7_bgr[0, 0]   # 픽셀 확인
+# img_C7_bgr[0, 0]   # 픽셀 확인
 img_C7_bgr = cv2.cvtColor(img_C7_bgr, cv2.COLOR_BGR2RGB)   # RGB로 변환
 plt.imshow(img_C7_bgr)   # 이미지 출력
 plt.axis('off')
