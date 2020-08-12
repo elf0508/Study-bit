@@ -3,6 +3,24 @@ import numpy as np
 import matplotlib.pyplot as plt
 import time
 
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, LSTM, Dropout, Conv2D, MaxPooling2D, Flatten
+from tensorflow.keras.callbacks import EarlyStopping, TensorBoard, ModelCheckpoint
+from sklearn.decomposition import PCA
+
+
+img_C7 = cv2.imread('T_project/file/L4.jpg/C7.jpg', cv2.IMREAD_GRAYSCALE)  # 흑백 이미지 로드
+
+plt.imshow(img_C7, cmap = 'gray')   # 이미지 출력
+plt.axis('off')
+plt.show()
+
+type(img_C7)  # 데이터 타입 확인
+img_C7        # 이미지 데이터 확인
+img_C7.shape    # 차원 확인(해상도) / (230, 346)
+
+
+
 # 컬러로 이미지 로드
 img_C7_bgr = cv2.imread('T_project/file/L4.jpg/C7.jpg', cv2.IMREAD_COLOR)
 

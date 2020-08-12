@@ -1,5 +1,3 @@
-# https://ivo-lee.tistory.com/91
-
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
@@ -10,15 +8,15 @@ from tensorflow.keras.layers import Dense, LSTM, Dropout, Conv2D, MaxPooling2D, 
 from tensorflow.keras.callbacks import EarlyStopping, TensorBoard, ModelCheckpoint
 from sklearn.decomposition import PCA
 
-# def aidemy_imshow(name, img):
+def aidemy_imshow(name, img):
 
-#     b,g,r = cv2.split(img)
-#     img = cv2.merge([r,g,b])
+    b,g,r = cv2.split(img)
+    img = cv2.merge([r,g,b])
 
-#     plt.imshow(img)
-#     plt.show()
+    plt.imshow(img)
+    # plt.show()
 
-# cv2.imshow = aidemy_imshow
+cv2.imshow = aidemy_imshow
 
 
 # OpenCV의 imread를 사용하여 전처리를 위한 이미지를 로드할 수 있다.
@@ -26,7 +24,7 @@ from sklearn.decomposition import PCA
 
 img_C7 = cv2.imread('T_project/file/L4.jpg/C7.jpg', cv2.IMREAD_GRAYSCALE)  # 흑백 이미지 로드
 
-plt.imshow(img_C7, cmap = 'gray')   # 이미지 출력
+plt.imshow(img_C7, cmap = 'gray')   # 이미지 출력   
 plt.axis('off')
 plt.show()
 

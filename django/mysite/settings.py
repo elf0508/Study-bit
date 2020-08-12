@@ -30,10 +30,10 @@ ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 
 # Application definition
-
+# 장고가 신경써야 할 앱의 목록
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
+    'django.contrib.admin',    # 관리자 페이지
+    'django.contrib.auth',      # 사용자 인증(로그인)
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
