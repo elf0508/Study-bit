@@ -42,3 +42,4 @@ data/opencv/*
 main.ipynb/*
 data.npy/*
 video.py/*
+.css/*

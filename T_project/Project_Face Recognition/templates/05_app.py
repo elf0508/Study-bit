@@ -4,13 +4,17 @@ from wtforms import *
 from wtforms.validators import *
 from flask import Flask, render_template
 from flask import url_for,render_template,request
+from flask_wtf import FlaskForm
+from flask_wtf.file import FileField, FileRequired
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
-app.config['SECRET_KEY'] = ''
+app.config['SECRET_KEY'] = 'a random string'
 
 class ProgramForm(FlaskForm):
-    name = StringField('What is Programming Language?', validatiors=[Required()])
+    name = StringField('What is Programming Language?', validatiors=[DataRequired()])
+    # name = StringField('What is Programming Language?', validatiors=[Required()])
     submit = SubmitField('Submit')
 
 app = Flask(__name__)
