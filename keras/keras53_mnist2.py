@@ -25,9 +25,12 @@ print(x_train[0].shape)                                   # (28, 28)
 
 
 # 데이터 전처리 1. 원핫인코딩
+
 from keras.utils import np_utils
+
 y_train = np_utils.to_categorical(y_train)
 y_test = np_utils.to_categorical(y_test)
+
 print(y_train.shape)                                      #  (60000, 10)
 
 # 데이터 전처리 2. 정규화                                            

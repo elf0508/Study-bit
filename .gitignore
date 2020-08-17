@@ -43,3 +43,5 @@ main.ipynb/*
 data.npy/*
 video.py/*
 .css/*
+.checkpoints/*
+.index/*
