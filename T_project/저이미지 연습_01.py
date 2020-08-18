@@ -11,8 +11,8 @@
 
 # 모델 구성
 
-from keras.models import Sequential
-from keras.layers import Dense, Dropout, Conv2D, MaxPool2D, Flatten
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Dropout, Conv2D, MaxPool2D, Flatten
 
 
 model = Sequential()

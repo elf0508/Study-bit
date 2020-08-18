@@ -44,8 +44,8 @@ x_train, x_test, y_train, y_test = train_test_split(
 )
 
 #2. 모델구성
-from keras.models import Sequential 
-from keras.layers import LSTM, Dense, Conv1D, MaxPooling1D, Flatten
+from tensorflow.keras.models import Sequential 
+from tensorflow.keras.layers import LSTM, Dense, Conv1D, MaxPooling1D, Flatten
 
 # (90, 4, 1)
 
