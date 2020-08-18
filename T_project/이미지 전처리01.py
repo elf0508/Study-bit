@@ -8,15 +8,15 @@ from tensorflow.keras.layers import Dense, LSTM, Dropout, Conv2D, MaxPooling2D, 
 from tensorflow.keras.callbacks import EarlyStopping, TensorBoard, ModelCheckpoint
 from sklearn.decomposition import PCA
 
-def aidemy_imshow(name, img):
+# def aidemy_imshow(name, img):
 
-    b,g,r = cv2.split(img)
-    img = cv2.merge([r,g,b])
+#     b,g,r = cv2.split(img)
+#     img = cv2.merge([r,g,b])
 
-    plt.imshow(img)
-    # plt.show()
+#     plt.imshow(img)
+#     # plt.show()
 
-cv2.imshow = aidemy_imshow
+# cv2.imshow = aidemy_imshow
 
 
 # OpenCV의 imread를 사용하여 전처리를 위한 이미지를 로드할 수 있다.

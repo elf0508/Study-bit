@@ -12,21 +12,29 @@ size = 5     # time_steps = 4    #      0  1  2  3  4  5  6  7  8  9 ...
 
 
 def split_x(seq, size) :
+
     aaa = []
+
     for i in range(len(seq) - size + 1) :   
         subset = seq[i : (i+size)]
         aaa.append([item for item in subset])
+
     print(type(aaa)) 
+
     return np.array(aaa)
 
 # 96바이 5로 나뉜다
+
 dataset = split_x(a, size)  # (96, 5)
-x = np.array(dataset[:,:4])
-y = np.array(dataset[:,4])
-x_predict = x[-6:,:]
+
+x = np.array(dataset[:, :4])
+y = np.array(dataset[:, 4])
+
+x_predict = x[-6:, :]
 x_predict_y = y[-6:]
 
 x = x.reshape(x.shape[0],x.shape[1],1)
+
 x_predict = x_predict.reshape(x_predict.shape[0],x_predict.shape[1],1)
 
 from sklearn.model_selection import train_test_split
@@ -46,8 +54,11 @@ model = Sequential()
 # model.add(LSTM(140, input_shape=(4, 1))) # input을 넣는거야 무조권 ^_^ 
 model.add(Conv1D(140, 2, padding='same', input_shape=(4, 1)))
 # model.add(MaxPooling1D())
+
 model.add(Conv1D(50, 2, padding='same'))
+
 model.add(Flatten())
+
 model.add(Dense(100))
 model.add(Dense(60))
 model.add(Dense(25)) 

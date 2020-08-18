@@ -1,36 +1,19 @@
-# 다중 분류
-from sklearn.datasets import load_iris
+'''
+중/저이미지(화질) * 1000명(ID) * 악세사리(비착용 : S001, 일반안경 : S002, 뿔테안경 : S003) 
 
-iris = load_iris()
+* 조명 (L1, L2, L3, L4, L8, L9, L19, L20, L22, L23, L25, L26) * 표정 (무표정 : E01, 웃음 : E02)
 
-x = iris.data
-y = iris.target
+* 각도 (C6, C7, C8) = 432,000장
 
-print(x.shape)      # (150, 4)
-print(y.shape)      # (150, )
+'''
 
 
-# x : scaler
-from sklearn.preprocessing import StandardScaler
 
-scaler = StandardScaler()
-scaler.fit(x)
-x = scaler.transform(x).reshape(150, 2, 2, 1)
+# 모델 구성
 
-# y : one hot encoding
-from keras.utils.np_utils import to_categorical
-
-y = to_categorical(y)
-print(y.shape)          # (150, 3)
-
-from sklearn.model_selection import train_test_split
-
-x_train, x_test, y_train, y_test = train_test_split(x, y, train_size =0.8,random_state= 10)
-
-
-#2. model
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Conv2D, MaxPool2D, Flatten
+
 
 model = Sequential()
 
@@ -63,22 +46,34 @@ model.add(Flatten())
 
 model.add(Dense(3, activation = 'softmax'))
 
+model.summary()
+
 
 # callbacks 
+
 from keras.callbacks import EarlyStopping, TensorBoard, ModelCheckpoint
+
 # earlystopping
+
 es = EarlyStopping(monitor = 'val_loss', patience = 50, verbose =1)
+
 # Tensorboard
+
 ts_board = TensorBoard(log_dir = 'graph', histogram_freq= 0,
                       write_graph = True, write_images=True)
+
 # Checkpoint
+
 modelpath = './model/{epoch:02d}-{val_loss:.4f}.hdf5'
+
 ckecpoint = ModelCheckpoint(filepath = modelpath, monitor = 'val_loss',
                             save_best_only= True)
 
 
 #3. compile, fit
+
 model.compile(loss = 'categorical_crossentropy', optimizer = 'adam', metrics = ['acc'])
+
 hist = model.fit(x_train, y_train, epochs =100, batch_size= 64,
                 validation_split = 0.2, verbose = 2,
                 callbacks = [es])
@@ -86,12 +81,16 @@ hist = model.fit(x_train, y_train, epochs =100, batch_size= 64,
 
 
 # evaluate
+
 loss, acc = model.evaluate(x_test, y_test, batch_size = 64)
+
 print('loss: ', loss )
 print('acc: ', acc)
 
-# graph
+# 그래프
+
 import matplotlib.pyplot as plt
+
 plt.figure(figsize = (10, 5))
 
 # 1

@@ -14,7 +14,7 @@ from ml_metrics import rmse
 
 #Load-------------------------------------------------------------------------------------------------------------------
 
-a = np.load('D:/s/koreaface/xa.npy')
+a = np.load('D:/Study-bit/T_project/H_Resolution/koreaface/xe.npy')
 
 # a=np.load('D:/s/koreaface/xb.npy')
 # a=np.load('D:/s/koreaface/xc.npy')
@@ -33,27 +33,33 @@ a = np.load('D:/s/koreaface/xa.npy')
 # a=np.load('D:/s/koreaface/xp.npy')
 # a=np.load('D:/s/koreaface/xq.npy')
 # a=np.load('D:/s/koreaface/xr.npy')
+
 #-----------------------------------------------------------------------------------------------------------------------
 #한 사람당 이미지 장수는 ? 10800개
 #사이즈가 너무 커서 메모리 용량 부족 한개씩 가져와야된다.
 
 #-----------------------------------------------------------------------------------------------------------------------
 
-print(a.shape)
+print(a.shape)   # (540, 20, 185, 270, 3)
 
-a = a.reshape(10800, int(a.shape[0]*a.shape[1]/10800), 100, 143, 3)
+a = a.reshape(10800, 185, 270, 3)
+# a = a.reshape(10800, int(a.shape[0]*a.shape[1]/10800), 100, 143, 3)
+
 # 파일당 인원 체크
 # 1.=22 , 2.=21 3.=18 4.=20 5.=?(스크래치),6.=20 ,7=24 ,8.=20,9.=23,10.=20 11.=23 12.=21,13.=21,14=22,15=31,16.=25,17.=24,18.=23
 # 총 인원 =334
 
-print(a.shape)
+print(a.shape)   # (10800, 185, 270, 3)
 
 k = np.arange(0, int(a.shape[1]),1) 
 
+print(k.shape)   # (185, )
+
 k = list(k)
 
-u = int(a.shape[1]) #22
+u = int(a.shape[1])  #22
 p = int(a.shape[0])
+
 
 c = []
 for i in tqdm(k):
@@ -62,10 +68,21 @@ for i in tqdm(k):
 
 y = np.asarray(c).reshape(-1,1)
 
-#
+print(y.shape)  # (1998000, 1)
+
+####################################
+
 x, x_pred, y, y_hat = train_test_split(a, y, train_size = 0.9)
+
 X = x.reshape(x.shape[0]*x.shape[1], x.shape[2], x.shape[3], x.shape[4])
+
+print(X.shape)
+
 X_pred = x_pred.reshape(x_pred.shape[0]*x_pred.shape[1], x_pred.shape[2], x_pred.shape[3], x_pred.shape[4])
+
+print(X_pred.shape)
+
+'''
 # 예측데이터를 10% 떼어낸다. Train에는 전체데이터 90%로 사용한다.
 # # X_pred = 1080개
 # # X = 9720개
@@ -146,3 +163,5 @@ model.save('./한안.h5')
 #predict----------------------------------------------------------------------------------------------------------------
 
 # pred=model.predict(X_pred)
+'''
+

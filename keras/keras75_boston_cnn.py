@@ -39,31 +39,38 @@ print("x_test.shape:",x_test.shape)
 print("y_train.shape:",y_train.shape)
 print("y_test.shape:",y_test.shape)
 
+
+# 모델 구성
+
 model=Sequential()
-model.add(Conv2D(10,(1,1),input_shape=(2,1,1),activation='relu'))  
+
+model.add(Conv2D(10, (1,1), input_shape=(2,1,1), activation='relu'))  
 #shape보다 kernel_size는 작게 잘라주어야 한다. 
 
-model.add(Conv2D(20,(1,1),activation='relu'))
-model.add(Conv2D(10,(1,1),activation='relu'))
-model.add(Conv2D(15,(1,1),activation='relu'))
+model.add(Conv2D(20,(1,1), activation='relu'))
+model.add(Conv2D(10,(1,1), activation='relu'))
+model.add(Conv2D(15,(1,1), activation='relu'))
+
 model.add(Flatten())
-model.add(Dense(1,activation='relu'))
+
+model.add(Dense(1, activation='relu'))
 
 model.summary()
 
 model.compile(loss='mse',optimizer='adam',metrics=['mse'])
+
 from keras.callbacks import EarlyStopping
-early_stopping=EarlyStopping(monitor='loss',patience=10,mode='aut')
-model.fit(x_train,y_train,epochs=10,batch_size=1)
+
+early_stopping = EarlyStopping(monitor='loss', patience=10, mode='aut')
+
+model.fit(x_train,y_train, epochs = 10, batch_size = 1)
 
 
+loss_acc = model.evaluate(x_test, y_test, batch_size = 1)
 
+y_predict = model.predict(x_test)
 
-loss_acc=model.evaluate(x_test,y_test,batch_size=1)
-
-y_predict=model.predict(x_test)
-
-print("y_predict:",y_predict)
+print("y_predict:", y_predict)
 
 from sklearn.metrics import mean_squared_error as mse
 

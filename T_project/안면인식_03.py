@@ -13,7 +13,7 @@ from ml_metrics import rmse
 
 #Load-------------------------------------------------------------------------------------------------------------------
 
-a = np.load('D:/s/koreaface/xa.npy')
+a = np.load('D:/Study-bit/T_project/H_Resolution/koreaface/xe.npy')
 # a=np.load('D:/s/koreaface/xb.npy')
 # a=np.load('D:/s/koreaface/xc.npy')
 # a=np.load('D:/s/koreaface/xd.npy')
@@ -33,6 +33,7 @@ a = np.load('D:/s/koreaface/xa.npy')
 # a=np.load('D:/s/koreaface/xr.npy')
 
 #-----------------------------------------------------------------------------------------------------------------------
+
 #한 사람당 이미지 장수는 ? 10800개
 #사이즈가 너무 커서 메모리 용량 부족 한개씩 가져와야된다.
 
@@ -41,6 +42,7 @@ a = np.load('D:/s/koreaface/xa.npy')
 print(a.shape)
 
 a = a.reshape(10800, int(a.shape[0]*a.shape[1]/10800), 100, 143, 3)
+
 # 파일당 인원 체크
 # 1.=22 , 2.=21 3.=18 4.=20 5.=?(스크래치),6.=20 ,7=24 ,8.=20,9.=23,10.=20 11.=23 12.=21,13.=21,14=22,15=31,16.=25,17.=24,18.=23
 # 총 인원 =334
