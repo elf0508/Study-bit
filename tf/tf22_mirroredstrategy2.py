@@ -11,8 +11,14 @@ x_train = x_train[..., None] / 255.
 x_test = x_test[..., None] / 255.
 
 
+# 원격 고속 컴퓨터에서
+
 # strategy
-strategy = tf.distribute.MirroredStrategy()
+
+strategy = tf.distribute.MirroredStrategy(
+cross_device_ops=tf.distribute.HierarchicalCopyAllReduce())
+
+# strategy = tf.distribute.MirroredStrategy()
 
 print('장치의 수: {}'.format(strategy.num_replicas_in_sync))
 

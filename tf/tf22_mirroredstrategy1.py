@@ -24,8 +24,13 @@ x_test = x_test[..., None]/np.float32(255)
 print(x_train.shape)          # (60000, 28, 28, 1)
 
 
+# 원격 고속 컴퓨터에서
+
 # MirroredStrategy()
-strategy = tf.distribute.MirroredStrategy()
+
+strategy = tf.distribute.MirroredStrategy (cross_device_ops = tf.distribute.ReductionToOneDevice ())
+
+# strategy = tf.distribute.MirroredStrategy()
 
 print('장치의 수: {}'.format(strategy.num_replicas_in_sync))
 
