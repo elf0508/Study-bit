@@ -82,7 +82,7 @@ X_pred = x_pred.reshape(x_pred.shape[0]*x_pred.shape[1], x_pred.shape[2], x_pred
 
 print(X_pred.shape)
 
-'''
+
 # 예측데이터를 10% 떼어낸다. Train에는 전체데이터 90%로 사용한다.
 # # X_pred = 1080개
 # # X = 9720개
@@ -163,5 +163,5 @@ model.save('./한안.h5')
 #predict----------------------------------------------------------------------------------------------------------------
 
 # pred=model.predict(X_pred)
-'''
+
 
