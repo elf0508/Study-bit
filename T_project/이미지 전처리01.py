@@ -3,10 +3,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import time
 
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, LSTM, Dropout, Conv2D, MaxPooling2D, Flatten
-from tensorflow.keras.callbacks import EarlyStopping, TensorBoard, ModelCheckpoint
-from sklearn.decomposition import PCA
+# from tensorflow.keras.models import Sequential
+# from tensorflow.keras.layers import Dense, LSTM, Dropout, Conv2D, MaxPooling2D, Flatten
+# from tensorflow.keras.callbacks import EarlyStopping, TensorBoard, ModelCheckpoint
+# from sklearn.decomposition import PCA
 
 # def aidemy_imshow(name, img):
 
