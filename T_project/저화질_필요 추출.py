@@ -79,7 +79,7 @@ def search(dirname):
     # return np.save('D:/Study-bit/T_project/Low_Resolution/Image4.npy', arr=f)
     # return np.save('D:/Study-bit/T_project/Low_Resolution/Image5.npy', arr=f)
 
-    return np.save('D:/Study-bit/T_project/Low_Resolution/Image92.npy', arr=f)
+    return np.save('D:/Study-bit/T_project/Low_Resolution/Image99.npy', arr=f)
 
     
 
@@ -88,6 +88,6 @@ def search(dirname):
 # search('D:/Study-bit/T_project/Low_Resolution/19062521')
 # search('D:/Study-bit/T_project/Low_Resolution/19062531')
 
-search('D:/Study-bit/T_project/Low_Resolution/19072311')
+search('D:/Study-bit/T_project/Low_Resolution/19072432')
 
 
