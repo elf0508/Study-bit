@@ -370,7 +370,7 @@ k_fold = KFold(n_splits=15, shuffle=True, random_state=0)
 # kNN
 
 
-clf = KNeighborsClassifier(n_neighbors = 10)
+clf = KNeighborsClassifier(n_neighbors = 12)
 # clf = KNeighborsClassifier(n_neighbors = 13)
 scoring = 'accuracy'
 score = cross_val_score(clf, train_data, target, cv=k_fold, n_jobs=1, scoring=scoring)
@@ -395,7 +395,8 @@ round(np.mean(score)*100, 2)
 
 #  Ramdom Forest
 
-clf = RandomForestClassifier(n_estimators=13)
+clf = RandomForestClassifier(n_estimators=16)
+# clf = RandomForestClassifier(n_estimators=13)
 scoring = 'accuracy'
 score = cross_val_score(clf, train_data, target, cv=k_fold, n_jobs=1, scoring=scoring)
 
