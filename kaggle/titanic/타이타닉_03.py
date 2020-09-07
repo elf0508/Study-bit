@@ -363,14 +363,15 @@ import numpy as np
 from sklearn.model_selection import KFold
 from sklearn.model_selection import cross_val_score
 
-k_fold = KFold(n_splits=15, shuffle=True, random_state=0)
+##########  숫자만 바꿨습니다    #################
+
+k_fold = KFold(n_splits=25, shuffle=True, random_state=0)
 # k_fold = KFold(n_splits=10, shuffle=True, random_state=0)
 
 
 # kNN
 
-
-clf = KNeighborsClassifier(n_neighbors = 12)
+clf = KNeighborsClassifier(n_neighbors = 20)
 # clf = KNeighborsClassifier(n_neighbors = 13)
 scoring = 'accuracy'
 score = cross_val_score(clf, train_data, target, cv=k_fold, n_jobs=1, scoring=scoring)
@@ -395,7 +396,7 @@ round(np.mean(score)*100, 2)
 
 #  Ramdom Forest
 
-clf = RandomForestClassifier(n_estimators=16)
+clf = RandomForestClassifier(n_estimators=26)
 # clf = RandomForestClassifier(n_estimators=13)
 scoring = 'accuracy'
 score = cross_val_score(clf, train_data, target, cv=k_fold, n_jobs=1, scoring=scoring)
@@ -442,7 +443,7 @@ submission = pd.DataFrame({
         "Survived": prediction
     })
 
-submission.to_csv('kaggle/titanic/submission_03.csv', index=False)
+submission.to_csv('kaggle/titanic/submission_03_1.csv', index=False)
 # submission.to_csv('kaggle/titanic/submission.csv', index=False)
 
 submission = pd.read_csv('kaggle/titanic/submission.csv')

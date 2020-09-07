@@ -203,9 +203,12 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.naive_bayes import GaussianNB 
 from sklearn.utils import shuffle
 
+###################  숫자를 바꿔봤습니다. ##########################
+
 # 모델
 
-train_data, train_label = shuffle(train_data, train_label, random_state = 5)
+train_data, train_label = shuffle(train_data, train_label, random_state = 3)
+# train_data, train_label = shuffle(train_data, train_label, random_state = 5)
 
 def train_and_test(model): 
     
@@ -225,10 +228,12 @@ log_pred = train_and_test(LogisticRegression())
 svm_pred = train_and_test(SVC()) 
 
 #kNN 
-knn_pred_4 = train_and_test(KNeighborsClassifier(n_neighbors = 4)) 
+knn_pred_4 = train_and_test(KNeighborsClassifier(n_neighbors = 12)) 
+# knn_pred_4 = train_and_test(KNeighborsClassifier(n_neighbors = 4)) 
 
 # Random Forest 
-rf_pred = train_and_test(RandomForestClassifier(n_estimators=100)) 
+rf_pred = train_and_test(RandomForestClassifier(n_estimators=150)) 
+# rf_pred = train_and_test(RandomForestClassifier(n_estimators=100)) 
 
 # Navie Bayes 
 nb_pred = train_and_test(GaussianNB())
@@ -241,7 +246,7 @@ submission = pd.DataFrame({
     
     "Survived": rf_pred }) 
     
-submission.to_csv('kaggle/titanic/submission_rf.csv', index=False)
+submission.to_csv('kaggle/titanic/submission_rf_01.csv', index=False)
 
 
 
