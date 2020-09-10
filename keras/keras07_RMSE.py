@@ -1,7 +1,9 @@
 # RMSE : 평균 제곱근 오차 / 입력변수가 여러 개일때, 오차가 가장 작은 선(기울기)을 찾는 것 = 값이 작을수록 정밀하다.
 
 # 1. 데이터
+
 import numpy as np 
+
 x_train = np.array([1,2,3,4,5,6,7,8,9,10])
 y_train = np.array([1,2,3,4,5,6,7,8,9,10])
 
@@ -10,29 +12,40 @@ y_test = np.array([11,12,13,14,15])
 
 x_pred = np.array([16,17,18])
 
+
 # 2. 모델구성
+
 from keras.models import Sequential
 from keras.layers import Dense
+
 model = Sequential()
 
 model.add(Dense(5, input_dim = 1))
+
 model.add(Dense(3))
 model.add(Dense(500))
 model.add(Dense(500))
 model.add(Dense(500))
 model.add(Dense(500))
 model.add(Dense(500))
+
 model.add(Dense(1))
 
+
 # 3. 훈련
+
 # train 데이터 > test 데이터
+
 model.compile(loss='mse', optimizer='adam', metrics=['mse'])
 
 model.fit(x_train, y_train, epochs=30, batch_size=1)
 # fit : 최적의 w 값을 찾아라
 
+
 # 4. 평가, 예측
+
 loss, mse = model.evaluate(x_test, y_test, batch_size=1) 
+
 print("loss : ", loss)
 print("mse : ", mse)
 
@@ -42,8 +55,10 @@ print("mse : ", mse)
 
 y_predict = model.predict(x_test)  # RMSE의 계산을 위한  x_test의 예측값 
 
+
 # 입력값에 y_test는 안되나요? ★절대안됨! x = input, y = output 이기 때문에!
 print(y_predict)
+
 
 # 재사용을 위한 함수 만들기 : def라고 선언한다. 사용자의 개입없이 자동으로 할당되는 설정 또는 값 
 # 함수명 : RMSE
@@ -54,6 +69,7 @@ from sklearn.metrics import mean_squared_error
 
 def RMSE(y_test, y_predict): 
      return np.sqrt(mean_squared_error(y_test, y_predict))
+     
 print("RMSE : ", RMSE(y_test, y_predict))
 
 # def RMSE(y_test, y_predict): <-- def = 함수를 호출하겠다 () = 입력값

@@ -2,6 +2,7 @@
 # earlyStopping 적용 / 1 : 1
 
 # 1. 데이터
+
 import numpy as np 
 
 # 1 ~ 100까지의 숫자
@@ -20,6 +21,7 @@ print(x1.shape)
 # (100, 3)
 
 # 데이터 분리
+
 from sklearn.model_selection import train_test_split
 
 x_train, x_test, y_train, y_test = train_test_split(
@@ -34,6 +36,7 @@ print(x_test)
 
 
 # 2. 모델구성
+
 from keras.models import Sequential, Model
 from keras.layers import Dense, Input
 
@@ -50,10 +53,13 @@ model = Model(inputs = input1,
 
 model.summary()
 
+
 # 3. 훈련
 model.compile(loss='mse', optimizer='adam', metrics=['mse'])
 
+
 from keras.callbacks import EarlyStopping
+
 early_stopping = EarlyStopping(monitor='loss', patience=5, mode='auto')
 
 model.fit(x_train, y_train, epochs=210, batch_size=1,
@@ -72,15 +78,24 @@ print("=================")
 print(y_predict)
 print("=================")
 
+
 # RMSE 구하기
+
 from sklearn.metrics import mean_squared_error
+
 def RMSE(y_test, y_predict):
+
      return np.sqrt(mean_squared_error(y_test, y_predict))
+
 print("RMSE : ", RMSE(y_test, y_predict))
 
+
 # R2 구하기
+
 from sklearn.metrics import r2_score
+
 r2 = r2_score(y_test, y_predict)
+
 print("R2 : ", r2)
 
 

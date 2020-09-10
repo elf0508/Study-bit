@@ -3,6 +3,7 @@
 # 각 각의 데이터를 훈련 --> 엮어서 값이 나오도록
 
 # 데이터
+
 import numpy as np 
 
 x1 = np.array([range(1,101), range(311,411), range(100)])  # 3행 100열
@@ -22,8 +23,11 @@ x2 = np.transpose(x2)
 y1 = np.transpose(y1)
 y2 = np.transpose(y2)
 
+
 # 데이터 분리  / _size의 이름을 같도록 해보자
+
 from sklearn.model_selection import train_test_split
+
 x1_train, x1_test, y1_train, y1_test = train_test_split(
 #     x, y, random_state=66, shuffle=True,
     x1, y1, shuffle=False,
@@ -38,8 +42,10 @@ x2_train, x2_test, y2_train, y2_test = train_test_split(
 
 
 # 2. 모델구성
+
 from keras.models import Sequential, Model
 from keras.layers import Dense, Input  # 함수형 모델은 input, output을 명시해줘야함
+
 
 # 모델 2개 만듬
 input1 = Input(shape=(3, ))
@@ -85,7 +91,9 @@ model.summary()
 # M1-M2가 번갈아 가면서 훈련될 예정
 # model.summary()의 layer 이름 변경하는 파라미터? ==> name 파라미터
 
+
 # 3. 훈련
+
 model.compile(loss='mse', optimizer='adam', metrics=['mse'])
 
 model.fit([x1_train, x2_train], [y1_train, y2_train], epochs=30, batch_size=1,
@@ -93,8 +101,11 @@ model.fit([x1_train, x2_train], [y1_train, y2_train], epochs=30, batch_size=1,
         #  verbose 사용  0 : 빠르게 처리 할 때(시간 단축)
   # list로 묶어서 한번에 model.fit 완성
          
+
 # 4. 평가, 예측
+
 loss = model.evaluate([x1_test, x2_test], [y1_test, y2_test], batch_size=1) 
+
 print("loss : ", loss)
 print('전체 loss :', loss[0])
 print('모델1의 loss :', loss[1])
@@ -110,9 +121,13 @@ print("=================")
 print(y2_predict)
 print("=================")
 
+
 # RMSE 구하기
+
 from sklearn.metrics import mean_squared_error
+
 def RMSE(y1_test, y1_predict):
+
      return np.sqrt(mean_squared_error(y1_test, y1_predict))
      # sklearn에서는 list를 감당할 수 없다
      
@@ -123,10 +138,14 @@ print("RMSE1 : ", RMSE1)
 print("RMSE2 : ", RMSE2)
 print("RMSE : ", (RMSE1 + RMSE2)/2)
 
+
 # R2 구하기
+
 from sklearn.metrics import r2_score
+
 r2_1 = r2_score(y1_test, y1_predict)
 r2_2 = r2_score(y2_test, y2_predict)
+
 print("R2_1 : ", r2_1)
 print("R2_1 : ", r2_2)
 print("R2 : ", (r2_1 + r2_2)/2)

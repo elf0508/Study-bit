@@ -1,6 +1,7 @@
 # 2개가 들어가서 3개가 나오는 것
 
 # 데이터
+
 import numpy as np 
 
 x1 = np.array([range(1,101), range(311,411)])  # 100바이 2
@@ -17,8 +18,11 @@ y1 = np.transpose(y1)
 y2 = np.transpose(y2)
 y3 = np.transpose(y3)
 
+
 # 데이터 분리  / _size의 이름을 같도록 해보자
+
 from sklearn.model_selection import train_test_split
+
 x1_train, x1_test, y1_train, y1_test = train_test_split(
 #     x, y, random_state=66, shuffle=True,
     x1, y1, shuffle=False,
@@ -36,7 +40,9 @@ y3_train, y3_test = train_test_split(
     train_size=0.8
 )
 
+
 # 2. 모델구성
+
 from keras.models import Sequential, Model
 from keras.layers import Dense, Input
 
@@ -56,6 +62,7 @@ dense3_2 = Dense(50, activation='relu')(dense3_1)
 
 # 위에서 만든 모델 3개를 엮어준다 : merge : 합병 / concatenate : 사슬처럼 엮다(단순 병합)
 from keras.layers.merge import concatenate
+
 merge1 = concatenate([dense1_3, dense2_2]) 
 # merge1 레이어를 만들어줌 (M1_끝 레이어 + M2_끝 레이어)
 
@@ -64,7 +71,9 @@ middle1 = Dense(5)(middle1)
 middle1 = Dense(7)(middle1)
 # output이 y1, y2, y3이므로 총 3개로 도출되어야 함
 
+
 # 병합한 모델을 분리 시킨다
+
 ##### output 모델 구성 ####
 
 output1 = Dense(30)(middle1)   # y_M1의 가장 끝 레이어가 middle1
@@ -88,7 +97,9 @@ model.summary()
 # M1-M3가 번갈아 가면서 훈련될 예정
 # model.summary()의 layer 이름 변경하는 파라미터? ==> name 파라미터
 
+
 # 3. 훈련
+
 model.compile(loss='mse', optimizer='adam', metrics=['mse'])
 
 model.fit([x1_train, x2_train], 
@@ -96,9 +107,12 @@ model.fit([x1_train, x2_train],
         validation_split=0.25, verbose=1)  
         #  verbose 사용  0 : 빠르게 처리 할 때(시간 단축)
          
+
 # 4. 평가, 예측
+
 loss = model.evaluate([x1_test, x2_test], 
                     [y1_test, y2_test, y3_test], batch_size=1) 
+
                     
 print("loss : ", loss)
 print('전체 loss :', loss[0])
@@ -116,10 +130,15 @@ print("=================")
 print(y3_predict)
 print("=================")
 
+
 # RMSE 구하기
+
 from sklearn.metrics import mean_squared_error
+
 def RMSE(y1_test, y1_predict):
+
      return np.sqrt(mean_squared_error(y1_test, y1_predict))
+
 RMSE1 = RMSE(y1_test, y1_predict)
 RMSE2 = RMSE(y2_test, y2_predict)
 RMSE3 = RMSE(y3_test, y3_predict)
@@ -129,8 +148,11 @@ print("RMSE2 : ", RMSE2)
 print("RMSE3 : ", RMSE3)
 print("RMSE : ", (RMSE1 + RMSE2 + RMSE3)/3)
 
+
 # R2 구하기
+
 from sklearn.metrics import r2_score
+
 r2_1 = r2_score(y1_test, y1_predict)
 r2_2 = r2_score(y2_test, y2_predict)
 r2_3 = r2_score(y3_test, y3_predict)

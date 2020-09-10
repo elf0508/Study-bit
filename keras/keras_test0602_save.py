@@ -10,6 +10,10 @@ datasets = np.load('./data/data_hit_np_save.npy')
 print(datasets.shape)  
 
 x = datasets[:, :4]
-print(x.shape)        
+
+print(x.shape)       
+
 y = datasets[:, 4:]
-print(y.shape)        
+
+print(y.shape)      
+  
