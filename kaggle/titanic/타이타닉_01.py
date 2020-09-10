@@ -60,7 +60,7 @@ def pie_chart(feature):
         plt.pie([survived[index], dead[index]], labels=['Survivied', 'Dead'], autopct='%1.1f%%') 
         plt.title(str(index) + '\'s ratio') 
         
-    # plt.show()
+#     plt.show()
 
 
 # pie_chart('Sex')
@@ -203,17 +203,18 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.naive_bayes import GaussianNB 
 from sklearn.utils import shuffle
 
-###################  숫자를 바꿔봤습니다. ##########################
 
 # 모델
 
-train_data, train_label = shuffle(train_data, train_label, random_state = 3)
-# train_data, train_label = shuffle(train_data, train_label, random_state = 5)
+train_data, train_label = shuffle(train_data, train_label, random_state = 5)
+# train_data, train_label = shuffle(train_data, train_label, random_state = 3)
 
 def train_and_test(model): 
     
     model.fit(train_data, train_label) 
+
     prediction = model.predict(test_data) 
+
     accuracy = round(model.score(train_data, train_label) * 100, 2) 
     
     print("Accuracy : ", accuracy, "%") 
@@ -221,21 +222,21 @@ def train_and_test(model):
     return prediction
 
 
-# Logistic Regression 
+# Logistic Regression  ( 로지스틱 회귀 )
 log_pred = train_and_test(LogisticRegression()) 
 
-# SVM 
+# SVM  ( 서포트 벡터 머신 )
 svm_pred = train_and_test(SVC()) 
 
-#kNN 
-knn_pred_4 = train_and_test(KNeighborsClassifier(n_neighbors = 12)) 
-# knn_pred_4 = train_and_test(KNeighborsClassifier(n_neighbors = 4)) 
+# kNN ( k-최근접 이웃 알고리즘 )
+knn_pred_4 = train_and_test(KNeighborsClassifier(n_neighbors = 4)) 
+# knn_pred_4 = train_and_test(KNeighborsClassifier(n_neighbors = 12)) 
 
-# Random Forest 
-rf_pred = train_and_test(RandomForestClassifier(n_estimators=150)) 
-# rf_pred = train_and_test(RandomForestClassifier(n_estimators=100)) 
+# Random Forest ( 랜덤 포레스트 )
+rf_pred = train_and_test(RandomForestClassifier(n_estimators=100)) 
+# rf_pred = train_and_test(RandomForestClassifier(n_estimators=150)) 
 
-# Navie Bayes 
+# Navie Bayes ( 나이브 베이즈 분류 )
 nb_pred = train_and_test(GaussianNB())
 
 # 저장
@@ -247,6 +248,7 @@ submission = pd.DataFrame({
     "Survived": rf_pred }) 
     
 submission.to_csv('kaggle/titanic/submission_rf_01.csv', index=False)
+
 
 
 
