@@ -8,11 +8,15 @@ from keras.layers import Dense, LSTM # Dense와 LSTM 레이어를 쓰겠다
 
 
 # 2. 모델구성 
+
 model = Sequential()
+
 model.add(LSTM(10, input_shape=(4, 1)))
+
 model.add(Dense(5))
 model.add(Dense(7))
-model.add(Dense(16))  
+model.add(Dense(16)) 
+ 
 model.add(Dense(10))
 
 model.summary()

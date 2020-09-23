@@ -10,7 +10,9 @@ from keras.layers import Dense, Flatten
 """
 
 model = Sequential() # 이미지를 가로, 세로 2, 2로 자르겠다.  
-model.add(Conv2D(10, (2, 2), input_shape = (10, 10, 1)))                  # (N, 9, 9, 10)            
+
+model.add(Conv2D(10, (2, 2), input_shape = (10, 10, 1)))                  # (N, 9, 9, 10)  
+
 model.add(Conv2D(7, (3, 3)))                                              # (N, 7, 7, 7)
 model.add(Conv2D(5, (2, 2), padding = 'same'))                            # (N, 7, 7, 5)
 model.add(Conv2D(5, (2, 2)))                                              # (N, 6, 6, 5)
@@ -18,9 +20,11 @@ model.add(Conv2D(5, (2, 2)))                                              # (N, 
 # model.add(Conv2D(5, (2, 2), strides = 2, padding ='same'))              # (N, 3, 3, 5) : padding보다 strides가 우선
 model.add(MaxPooling2D(pool_size = 2))                                    # (N, 3, 3, 5)
 model.add(Flatten())                                                      # (N, 45)      : 2차원
+
 model.add(Dense(1))                                                       # (N, 1)
 
 model.summary()
+
 """
 #Conv2D( 10,     (2, 2),     input_shape = (   10,    10,      1  ))
        filter  kernal_size 

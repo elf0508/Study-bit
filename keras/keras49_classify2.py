@@ -21,6 +21,7 @@ from keras.utils import np_utils
 y = np_utils.to_categorical(y)   # y값을 분류해서,  다시 y에게 반환한다.
 
 print(y)
+
 # 원핫 인코딩
 
 """ 
@@ -49,10 +50,13 @@ print(y.shape)                     # (10, 5)
 # 2. 모델구성
 
 model=Sequential()
+
 model.add(Dense(100, input_dim=1, activation='relu'))
+
 model.add(Dense(50, activation='relu'))
 model.add(Dense(20))
 model.add(Dense(10, activation='relu'))
+
 model.add(Dense(5, activation='softmax'))  # (10, 5)
 
 # softmax 
@@ -71,6 +75,7 @@ model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc']
 #  loss = 'categorical_crossentropy' : 다중분류에서 사용 
 
 from keras.callbacks import EarlyStopping
+
 early_stopping = EarlyStopping(monitor='loss', patience=5, mode='auto')
 
 model.fit(x, y, 
@@ -110,6 +115,7 @@ one_hot_decoder
 : 최대값의 색인 위치를 찾는다.
 """
 #1. 함수 사용
+
 def decode(datum):
     return np.argmax(datum)
   

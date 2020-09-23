@@ -6,6 +6,7 @@ from keras.layers import Dense, LSTM # Dense와 LSTM 레이어를 쓰겠다
 
 
 # 1. 데이터 생성
+
 a = np.array(range(1, 11))        # a = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] (10, )
 size = 5     # time_steps = 4     #      0  1  2  3  4  5  6  7  8  9
 
@@ -21,8 +22,11 @@ def split_x(seq, size) :
     return np.array(aaa)
 dataset = split_x(a, size)
 
+
 # 6바이 5로 나뉜다
+
 dataset = split_x(a, size)  # (6, 5)
+
 print(dataset)
 print(dataset.shape)
 print(type(dataset))   # <class 'numpy.ndarray'>
@@ -58,20 +62,31 @@ x_train, x_test, y_train, y_test = train_test_split(
 # print(x.shape)
 # print(x.shape)
 
+
 # 2. 모델구성
+
 model = Sequential()
+
 model.add(LSTM(10, input_shape=(4, 1)))
+
 model.add(Dense(5))
 model.add(Dense(640))
 model.add(Dense(16))  
+
 model.add(Dense(1))
 
+
 from keras.callbacks import EarlyStopping
+
 early_stopping = EarlyStopping(monitor='loss', patience=100, mode='auto') 
+
 model.compile(loss='mse', optimizer='adam', metrics=['mse'])
+
 model.fit(x_train,y_train, epochs=10000, batch_size=3, callbacks=[early_stopping])  
 
+
 #4. 평가와 예측
+
 loss,mse = model.evaluate(x_test,y_test) 
 print('mse 는',mse)
 
@@ -79,13 +94,20 @@ y_predict = model.predict(x_test)
 print(y_predict)
 
 from sklearn.metrics import mean_squared_error 
+
 def RMSE(y_test, y_predict) :
+
     return np.sqrt(mean_squared_error(y_test, y_predict))
+
 print('RMSE 는', RMSE(y_test, y_predict) )
 
+
 # R2 구하기
+
 from sklearn.metrics import r2_score 
+
 r2 = r2_score(y_test, y_predict)
+
 print('R2는 ', r2)
 
 

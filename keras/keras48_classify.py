@@ -17,13 +17,17 @@ print("y.shape : ", y.shape)  # (10, )
 # 2. 모델구성
 
 model=Sequential()
+
 model.add(Dense(100, input_dim=1, activation='relu'))
+
 model.add(Dense(50, activation='relu'))
 model.add(Dense(20))
 model.add(Dense(10, activation='relu'))
+
 model.add(Dense(1, activation='sigmoid'))  # sigmoid 를 곱해서 0 or 1 로 나오도록
 
 model.summary()   
+
 """ 
 - 계산된 함수가 activation을 통해 다음 layer에 넘어간다.
 - 가장 마지막 output layer값이 가중치와 '활성화 함수'와 곱해져서 반환된다. 
@@ -39,6 +43,7 @@ model.summary()
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['acc'])  # acc : 분류 모델 0 or 1
 
 from keras.callbacks import EarlyStopping
+
 early_stopping = EarlyStopping(monitor='loss', patience=5, mode='auto')
 
 model.fit(x, y, 

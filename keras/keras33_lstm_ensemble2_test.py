@@ -7,6 +7,7 @@ from numpy import array
 
 
 # 1. 데이터
+
 x1 = array([[1,2,3],[2,3,4],[3,4,5],[4,5,6],
             [5,6,7],[6,7,8],[7,8,9],[8,9,10],
             [9,10,11],[10,11,12],
@@ -49,6 +50,7 @@ print(x2)
 
 
 # 2. 모델구성
+
 from keras.models import Model
 from keras.layers import Dense, LSTM, Input
 
@@ -86,12 +88,14 @@ model = Model(inputs=[input1, input2],
 model.summary()  
 
 # 3. 훈련
+
 model.compile(optimizer='adam', loss='mse')
 
 model.fit([x1, x2], y, epochs=850, batch_size=32)  
 
 
 # 4. 예측
+
 x1_predict = array([55,65,75])     
 x2_predict = array([65,75,85])
 
@@ -103,4 +107,5 @@ print(x1_predict)
 print(x2_predict)
 
 y_predict = model.predict([x1_predict,x2_predict])   # fit의 x 모양,개수 / y의 개수를 맞춰준다.
+
 print(y_predict)
