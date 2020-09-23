@@ -22,9 +22,12 @@ plt.imshow(x_train[0])
 # plt.show()
 
 # 데이터 전처리 1. 원핫인코딩
+
 from keras.utils import np_utils
+
 y_train = np_utils.to_categorical(y_train)
 y_test = np_utils.to_categorical(y_test)
+
 print(y_train.shape)           # (50000, 100)
 
 # 데이터 전처리 2. 정규화                                            
@@ -40,6 +43,7 @@ print(y_test.shape)
 # 모델 구성 함수형
 
 input1 = Input(shape=(32,32,3))
+
 coni_1 = Conv2D(10, (2, 2))(input1)                            
 coni_2 = Conv2D(15, (3, 3))(coni_1)   
 drop1 = Dropout(0.2)(coni_2)
@@ -69,12 +73,14 @@ coni_14 = Conv2D(10, (2, 2), padding = 'same')(drop6)
 drop7 = Dropout(0.3)(coni_14)
 
                                             
-flatten = Flatten()(drop7)                                                   
+flatten = Flatten()(drop7)         
+
 coni_15 = Dense(100, activation='softmax')(flatten)                            
 
 model = Model(inputs=input1, outputs = coni_15)
 
 model.summary()
+
 
 # 3. 컴파일, 훈련
 
@@ -93,7 +99,9 @@ checkpoint =  ModelCheckpoint(filepath = modelpath, monitor='val_loss',
 es = EarlyStopping(monitor = 'loss', patience = 20, mode= 'auto')
 
 """ Tensorboard """
+
 from keras.callbacks import TensorBoard   # Tensorboard 가져오기
+
 tb_hist = TensorBoard(log_dir='graph', histogram_freq= 0 , # log_dir=' 폴더 ' : 제일 많이 틀림
                       write_graph= True, write_images= True) 
 
@@ -123,7 +131,9 @@ import matplotlib.pyplot as plt
 
 plt.figure(figsize = (10, 6))   # 10 x 6인치의 판이 생김
 
+
 # 1번 그림
+
 plt.subplot(2, 1, 1)  # (2, 1, 1) 2행 1열의 그림 1번째꺼 / subplot : 2장 그림               
 plt.plot(hist.history['loss'], marker='.', c='red', label='loss')                     
 plt.plot(hist.history['val_loss'], marker='.', c='blue', label='val_loss')                  
@@ -134,7 +144,9 @@ plt.xlabel('epoch')
 # plt.legend(['loss','val_loss']) 
 plt.legend(loc='upper right')   
 
+
 # 2번 그림
+
 plt.subplot(2, 1, 2)  # (2, 1, 2) 2행 1열의 그림 2번째꺼               
 plt.plot(hist.history['acc'])                     
 plt.plot(hist.history['val_acc'])                  
