@@ -64,6 +64,6 @@ model.summary()
  : data를 쫙 펴준다.
  : data를 2차원으로 변형시켜 Dense형을 이용하여 우리가 볼수 있는 숫자로 나오게 한다. 
 # CNN_parameter
- :  ( channel * kenarl_size  * filter ) + ( bias * filter)
+ :  ( channel * kenarl_size  * filter ) + ( bias * filter) 
  ex) (   1    *   (2 * 2)    *   10   ) + (  1   *   10  )
 """
