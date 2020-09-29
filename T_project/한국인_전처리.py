@@ -135,7 +135,10 @@ def search(dirname):
 
     return f
 
-x=search('D:/Study-bit/T_project/Low_Resolution')
+
+
+x=search('filenames = os.listdir(dirname)')
+# x=search('D:/Study-bit/T_project/Low_Resolution')
 # x=search('C:/Users/bitcamp/Downloads/Low_Resolution')
 
 print(x.shape)
