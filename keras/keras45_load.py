@@ -3,12 +3,14 @@ from keras.models import Sequential, Model
 from keras.layers import Dense, LSTM
 
 #1. 데이터
+
 a = np.array(range(1,101))
 size = 5                                         
 
 
 
 # LSTM 모델을 완성하시오.
+
 def split_x(seq, size):
     aaa = []
     for i in range(len(seq) - size + 1):       # len = length  : 길이  i in range(6)  : [0, 1, 2, 3, 4, 5]
@@ -42,10 +44,15 @@ print(y.shape)
 
 
 #==================================================================================================
+
 #2. 모델
+
 """ 저장한 model 불러오기 """
+
 input = Dense(10)
+
 from keras.models import load_model
+
 model = load_model('./model/save_keras44.h5')
 
 
@@ -56,8 +63,11 @@ model.add(Dense(1, name ='new4'))
                                                     
 model.summary()
 
+
 # EarlyStopping
+
 from keras.callbacks import EarlyStopping
+
 es = EarlyStopping(monitor = 'loss', patience=100, mode = 'min')
 
 
@@ -65,11 +75,13 @@ es = EarlyStopping(monitor = 'loss', patience=100, mode = 'min')
 
 #3. 훈련
 model.compile(loss = 'mse', optimizer='adam', metrics= ['acc'])
+
 hist = model.fit(x, y, epochs =100, validation_split=0.2, batch_size = 1, verbose =1,
                  callbacks = [es])                
 
                          
 #4. 평가, 예측
+
 loss, mse = model.evaluate(x, y)
 
 

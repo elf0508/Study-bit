@@ -11,8 +11,11 @@ datasets = np.load('./data/data_hit_np_save.npy')
 print(datasets.shape)  
 
 x = datasets[:, :4]
+
 print(x.shape)        
+
 y = datasets[:, 4:]
+
 print(y.shape)        
 
 
@@ -21,12 +24,14 @@ a = pd.read_csv("./data/csv/data_sam.csv", index_col = 0,
                         header = 0, encoding='cp949', sep =',')
 
 a = a.fillna('0')
+
 a.head()
 
 b = pd.read_csv("./data/csv/data_hit.csv", index_col = 0,
                         header = 0, encoding='cp949', sep =',')
 
 b = a.fillna('0')
+
 b.head()
 
 
@@ -49,6 +54,7 @@ print(b.shape) # (700, 2)
 # print(a)
 # print(b)
 
+
 print("====판다스를 넘파이로 바꾸는 함수(.values)========")
 
 a = a.values # 
@@ -69,9 +75,20 @@ np.save('./data/csv/data_hit.npy', arr=b)
 # a = np.load('./data/csv/data_sam.npy')
 # b = np.load('./data/csv/data_hit.npy')
 
+print("------ a  ------")
+
 print(a)
+
+print("------ b ------")
+
 print(b)
+
+print("------ a.shape  ------")
+
 print(a.shape)
+
+print("------ b.shape  ------")
+
 print(b.shape)
 
 # # df.fillna(0)
@@ -85,6 +102,7 @@ print(b.shape)
 # print(b.fillna(0))
 
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
+
 # scaler = StandardScaler()
 scaler = MinMaxScaler()
 scaler_cols = ['시가','고가', '저가', '종가','거래량']
@@ -129,7 +147,9 @@ print("=== b shape ===")
 print("b.shape : ", b.shape)
 print(b)
 
+
 #2. 모델 구성
+
 from keras.models import Sequential, Model
 from keras.layers import Dense, Dropout, Input, LSTM
 
@@ -145,22 +165,30 @@ input2_2 = Dense(30)(input2_1)
 input2_3 = Dense(50)(input2_2)
 input2_4 = Dropout(0.5)(input2_3)
 
+
 ####  합병 ######
+
 from keras.layers.merge import concatenate
+
 merge1 = concatenate([input1_3, input2_3]) 
 
 middle1 = Dense(30)(merge1) 
 middle1 = Dense(5)(middle1)
 middle1 = Dense(7)(middle1)
 
+
 # 병합한 모델을 분리 시킨다 
+
 ##### output 모델 구성 ####
 
 output1 = Dense(30)(middle1)  # y_M1의 가장 끝 레이어가 middle1
+
 output1_2 = Dense(7)(output1)
+
 output1_3 = Dense(1)(output1_2)  # y의 열에 맞춰야한다.
 
 ### 함수형 모델 명시 ###   Sequential은 맨 위에 명시 해야한다.  model = Sequential()
+
 model = Model(inputs=[input1, input2], 
             outputs = output1_3)
 
@@ -168,31 +196,41 @@ model.summary()
 
 
 # callbacks 
+
 from keras.callbacks import EarlyStopping, TensorBoard, ModelCheckpoint
 
 # earlystopping
+
 es = EarlyStopping(monitor = 'val_loss', patience = 50, verbose =1)
 
 # Tensorboard
+
 ts_board = TensorBoard(log_dir = 'graph', histogram_freq= 0,
                       write_graph = True, write_images=True)
 
 # Checkpoint
+
 modelpath = './model/{epoch:02d}-{val_loss:.4f}.hdf5'
+
 ckecpoint = ModelCheckpoint(filepath = modelpath, monitor = 'val_loss',
                             save_best_only= True)
 
 
 #3. 훈련
+
 model.compile(loss = 'categorical_crossentropy', optimizer = 'adam', metrics = ['acc'])
+
 hist = model.fit(x_train, y_train, epochs =100, batch_size= 64,
                 validation_split = 0.2, verbose = 2,
                 callbacks = [es,ts_board,ckecpoint])
 
 
 # 평가, 예측
+
 loss, acc = model.evaluate(x_test, y_test, batch_size = 64)
+
 print('loss: ', loss )
+
 print('acc: ', acc)
 
 y1_pred = model.predict([x_test])
@@ -202,10 +240,14 @@ for i in range(5):
 
 
 # graph
+
 import matplotlib.pyplot as plt
+
 plt.figure(figsize = (10, 5))
 
+
 # 1
+
 plt.subplot(2, 1, 1)
 plt.plot(hist.history['loss'], c= 'red', marker = '^', label = 'loss')
 plt.plot(hist.history['val_loss'], c= 'cyan', marker = '^', label = 'val_loss')
@@ -215,6 +257,7 @@ plt.ylabel('loss')
 plt.legend()
 
 # 2
+
 plt.subplot(2, 1, 2)
 plt.plot(hist.history['acc'], c= 'red', marker = '^', label = 'acc')
 plt.plot(hist.history['val_acc'], c= 'cyan', marker = '^', label = 'val_acc')

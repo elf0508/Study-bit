@@ -28,9 +28,12 @@ print(x_train[0].shape)     # (28, 28)
 
 
 # 데이터 전처리 1. 원핫인코딩
+
 from keras.utils import np_utils
+
 y_train = np_utils.to_categorical(y_train)
 y_test = np_utils.to_categorical(y_test)
+
 print(y_train.shape)           # (60000, 10)
 
 # 데이터 전처리 2. 정규화                                            
@@ -46,7 +49,9 @@ print(y_test.shape)
 # 모델 구성
 
 model = Sequential()  
-model.add(Dense(30, input_shape = (28*28, )))                            
+
+model.add(Dense(30, input_shape = (28*28, )))  
+
 model.add(Dense(70, activation='relu'))                                              
 model.add(Dense(370, activation='relu'))
 model.add(Dropout(0.2))                                            
@@ -73,6 +78,7 @@ model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc']
 #  loss = 'categorical_crossentropy' : 다중분류에서 사용 
 
 from keras.callbacks import EarlyStopping
+
 early_stopping = EarlyStopping(monitor='loss', patience=2, mode='auto')
 
 model.fit(x_train, y_train, 

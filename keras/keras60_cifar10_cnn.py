@@ -24,12 +24,16 @@ print(x_train[0].shape)     # (32, 32, 3)
 
 
 # 데이터 전처리 1. 원핫인코딩
+
 from keras.utils import np_utils
+
 y_train = np_utils.to_categorical(y_train)
 y_test = np_utils.to_categorical(y_test)
+
 print(y_train.shape)           # (50000, 10)
 
-# 데이터 전처리 2. 정규화                                            
+# 데이터 전처리 2. 정규화      
+#                                       
 # x_train = x_train.reshape(60000, 28, 28).astype('float32') /255  
 # x_test = x_test.reshape(10000, 28, 28).astype('float32') /255   # 뒤에 ' . '을 써도 된다.                                  
 #             cnn 사용을 위한 4차원       # 타입 변환       # (x - min) / (max - min) : max =255, min = 0                                      
@@ -46,13 +50,15 @@ print(y_test.shape)  # (10000, 10)
 # 모델 구성
 
 input1 = Input(shape=(32,32,3))
+
 coni_1 = Conv2D(450, (2, 2))(input1)                            
 coni_2 = Conv2D(650, (3, 3))(coni_1)   
 drop = Dropout(0.2)(coni_2)
 
 coni_3 = Conv2D(750, (2, 2), padding = 'same')(drop) 
                                             
-flatten = Flatten()(coni_3)                                                   
+flatten = Flatten()(coni_3)     
+
 coni_4 = Dense(10, activation='softmax')(flatten)                            
 
 model = Model(inputs=input1, outputs = coni_4)
@@ -70,6 +76,7 @@ model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc']
 #  loss = 'categorical_crossentropy' : 다중분류에서 사용 
 
 from keras.callbacks import EarlyStopping
+
 early_stopping = EarlyStopping(monitor='loss', patience=5, mode='auto')
 
 model.fit(x_train, y_train, 

@@ -23,9 +23,12 @@ print(y_test.shape)   # (10000, 1)
 print(x_train[0].shape)  # (32, 32, 3)
 
 # 데이터 전처리 1. 원핫인코딩
+
 from keras.utils import np_utils
+
 y_train = np_utils.to_categorical(y_train)
 y_test = np_utils.to_categorical(y_test)
+
 print(y_train.shape)            # (50000, 10)
 
 # 데이터 전처리 2. 정규화                                            
@@ -65,7 +68,9 @@ model.summary()
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc'])
 #  loss = 'categorical_crossentropy' : 다중분류에서 사용 
 
+
 from keras.callbacks import EarlyStopping
+
 early_stopping = EarlyStopping(monitor='loss', patience=1, mode='auto')
 
 model.fit(x_train, y_train, 

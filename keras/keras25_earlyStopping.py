@@ -7,6 +7,7 @@
 # 2개가 들어가서 1개가 나오는 것
 
 # 데이터
+
 import numpy as np 
 
 x1 = np.array([range(1,101), range(311,411), range(411,511)])  # 100바이 3  (100, 3)
@@ -19,7 +20,9 @@ x2 = np.transpose(x2)
 y1 = np.transpose(y1)
 
 # 데이터 분리  / _size의 이름을 같도록 해보자
+
 from sklearn.model_selection import train_test_split
+
 x1_train, x1_test, y1_train, y1_test = train_test_split(
 #     x, y, random_state=66, shuffle=True,
     x1, y1, shuffle=False,
@@ -33,6 +36,7 @@ x2_train, x2_test = train_test_split(
 )
 
 # 2. 모델구성
+
 from keras.models import Sequential, Model
 from keras.layers import Dense, Input
 
@@ -59,6 +63,7 @@ middle1 = Dense(5)(middle1)
 middle1 = Dense(7)(middle1)
 
 # 병합한 모델을 분리 시킨다 
+
 ##### output 모델 구성 ####
 
 output1 = Dense(30)(middle1)
@@ -73,12 +78,15 @@ model = Model(inputs=[input1, input2],
 
 model.summary()
 
+
 # 3. 훈련
+
 model.compile(loss='mse', optimizer='adam', metrics=['mse'])
 # earlyStopping 파라미터를 호출
 # 카멜케이스 형태로 앞의 'E'가 대문자
 
 from keras.callbacks import EarlyStopping
+
 early_stopping = EarlyStopping(monitor='loss', patience=5, mode='auto')
 # monitor=모니터링 지표
 # patience=선생님의 개그를 견디는 횟수 / mode가 min이면 그 횟수 이하, max면 그 횟수 이상
@@ -90,7 +98,9 @@ model.fit([x1_train, x2_train], y1_train,
         callbacks=[early_stopping])  
         # 콜백에는 리스트 형태  
          
+
 # 4. 평가, 예측
+
 loss = model.evaluate([x1_test, x2_test], y1_test, 
                      batch_size=1) 
 
@@ -108,15 +118,24 @@ print("=================")
 print(y1_predict)
 print("=================")
 
+
 # RMSE 구하기
+
 from sklearn.metrics import mean_squared_error
+
 def RMSE(y1_test, y1_predict):
+
      return np.sqrt(mean_squared_error(y1_test, y1_predict))
+
 RMSE1 = RMSE(y1_test, y1_predict)
 
 print("RMSE1 : ", RMSE1)
 
+
 # R2 구하기
+
 from sklearn.metrics import r2_score
+
 r2_1 = r2_score(y1_test, y1_predict)
+
 print("R2_1 : ", r2_1)

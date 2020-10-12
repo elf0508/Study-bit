@@ -3,6 +3,7 @@
 # 2개가 들어가서 1개가 나오는 것
 
 # 데이터
+
 import numpy as np 
 
 x1 = np.array([range(1,101), range(311,411), range(411,511)])  # 100바이 3  (100, 3)
@@ -15,7 +16,9 @@ x2 = np.transpose(x2)
 y1 = np.transpose(y1)
 
 # 데이터 분리  / _size의 이름을 같도록 해보자
+
 from sklearn.model_selection import train_test_split
+
 x1_train, x1_test, y1_train, y1_test = train_test_split(
 #     x, y, random_state=66, shuffle=True,
     x1, y1, shuffle=False,
@@ -29,6 +32,7 @@ x2_train, x2_test = train_test_split(
 )
 
 # 2. 모델구성
+
 from keras.models import  Model
 from keras.layers import Dense, Input
 
@@ -61,6 +65,7 @@ middle1 = Dense(7)(middle1)
 # 병합한 모델을 분리 시킨다 
 ##### output 모델 구성 ####
 
+
 output1 = Dense(30)(middle1)  # y_M1의 가장 끝 레이어가 middle1
 output1_2 = Dense(7)(output1)
 output1_3 = Dense(3)(output1_2)
@@ -75,6 +80,7 @@ model.summary()
 
 
 # 3. 훈련
+
 model.compile(loss='mse', optimizer='adam', metrics=['mse'])
 
 model.fit([x1_train, x2_train], y1_train, 
@@ -82,9 +88,12 @@ model.fit([x1_train, x2_train], y1_train,
         validation_split=0.25, verbose=1)  
         #  verbose 사용  0 : 빠르게 처리 할 때(시간 단축)
          
+
 # 4. 평가, 예측
+
 loss = model.evaluate([x1_test, x2_test], y1_test, 
                      batch_size=1) 
+
                     
 print("loss : ", loss)
 print('전체 loss :', loss[0])
@@ -95,15 +104,24 @@ print("=================")
 print(y1_predict)
 print("=================")
 
+
 # RMSE 구하기
+
 from sklearn.metrics import mean_squared_error
+
 def RMSE(y1_test, y1_predict):
+
      return np.sqrt(mean_squared_error(y1_test, y1_predict))
+
 RMSE1 = RMSE(y1_test, y1_predict)
 
 print("RMSE1 : ", RMSE1)
 
+
 # R2 구하기
+
 from sklearn.metrics import r2_score
+
 r2_1 = r2_score(y1_test, y1_predict)
+
 print("R2_1 : ", r2_1)

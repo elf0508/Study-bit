@@ -20,6 +20,7 @@ print(y_test.shape)  # (10000,)  1만개의 스칼라를 가진, 벡터 1개
 # plt.show()
 
 print(x_train[0].shape)  # (가로 : 28, 세로 : 28)
+
 plt.imshow(x_train[1], 'gray')
 # plt.imshow(x_train[0])
 plt.show()

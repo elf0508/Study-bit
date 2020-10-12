@@ -5,10 +5,12 @@
 from numpy import array
 # import numpy as np
 # x = np.array
+
 from keras.models import Sequential, Model
 from keras.layers import Dense, Input, LSTM
 
 # 1. 데이터
+
 x = array([[1,2,3],[2,3,4],[3,4,5],[4,5,6],
             [5,6,7],[6,7,8],[7,8,9],[8,9,10],
             [9,10,11],[10,11,12],
@@ -44,9 +46,11 @@ x = x.reshape(x.shape[0], x.shape[1], 1)
 # 함수형에서는 Input, output 이 무엇인지 명시를 해야한다
 
 model = Sequential()
+
 input1 = Input(shape=(3, 1))
 # model.add(LSTM(10, input_length = 3, input_dim = 1, return_sequences=True)) <-- 시퀀스 모델
 # model.add(LSTM(10, return_sequences=True)) 
+
 
 # LSTM을 2번 사용하려면 (3차원으로 만들기)
 # return_sequences=True : 2차원을 3차원으로 받기 위해서 써줘야한다.(차원이 늘었다.)
@@ -64,9 +68,11 @@ model.summary()
  
 
 # 3. 훈련
+
 model.compile(loss='mse', optimizer='adam', metrics=['mse'])
 
 from keras.callbacks import EarlyStopping
+
 early_stopping = EarlyStopping(monitor='loss', patience=5, mode='auto')
 
 model.fit(x, y, 
@@ -86,5 +92,6 @@ x_predict = x_predict.reshape(1, 3, 1)
 print(x_predict)
 
 y_predict = model.predict(x_predict)
+
 print(y_predict)
 

@@ -3,12 +3,14 @@ from keras.models import Sequential, Model
 from keras.layers import Dense, LSTM
 
 #1. 데이터
+
 a = np.array(range(1,101))
 size = 5                                         
 
 # x_predict = np.array([11, 12, 13, 14])
 
 # LSTM 모델을 완성하시오.
+
 def split_x(seq, size):
     aaa = []
     for i in range(len(seq) - size + 1):       # len = length  : 길이  i in range(6)  : [0, 1, 2, 3, 4, 5]
@@ -23,6 +25,7 @@ print(dataset.shape)                           # (6, 5)
 
 
 # x, y 값 나누기
+
 x = dataset[:, 0:4]                            # [ : ] 모든행 가져오고, [0 : 4] 0~3까지
 y = dataset[:, 4]                              # [ : ] 모든행 가져오고, [  : 4] 4번째
 
@@ -32,15 +35,21 @@ x = x.reshape(x.shape[0], x.shape[1], 1)
 
 
 #==================================================================================================
+
 #2. 모델
+
 """ 저장한 model 불러오기 """
+
 # from keras.models import load_model
 # model = load_model('./model/save_keras44.h5')
 model = Sequential()
+
 model.add(LSTM(350, input_shape =(4,1)))                # input_length : time_step (열)
+
 model.add(Dense(456))   
 model.add(Dense(506))   
-model.add(Dense(600))   
+model.add(Dense(600))  
+
 model.add(Dense(1, name ='new'))                 
 
 model.summary()
@@ -48,12 +57,16 @@ model.summary()
 # 3.훈련
 
 # EarlyStopping
-from keras.callbacks import EarlyStopping        
+
+from keras.callbacks import EarlyStopping    
+
 es = EarlyStopping(monitor = 'loss', patience=100, mode = 'min')
 
 
 """ Tensorboard """
+
 from keras.callbacks import TensorBoard                                 # Tensorboard 가져오기
+
 tb_hist = TensorBoard(log_dir='graph', histogram_freq= 0 ,              # log_dir=' 폴더 ' : 제일 많이 틀림
                       write_graph= True, write_images= True)           
 """
@@ -70,8 +83,11 @@ tb_hist = TensorBoard(log_dir='graph', histogram_freq= 0 ,              # log_di
 
 
 # 가중치(W) 저장 방법 
+
 #3. 실행
+
 model.compile(loss = 'mse', optimizer='adam', metrics= ['acc'])
+
 hist = model.fit(x, y, epochs =100, batch_size = 32, verbose =1,   
                  validation_split = 0.2,
                  callbacks = [es, tb_hist])                              # Tensorboard 사용
@@ -83,6 +99,7 @@ print(hist.history.keys())                          # dict_keys(['loss', 'mse'])
  
 
 # 그래프를 그려서 보기
+
 import matplotlib.pyplot as plt                     # 그래프 그리는 것
 
 plt.plot(hist.history['loss'])                      # 'loss'값을 y로 넣겠다./ 인자 하나만 쓰면 y 값으로 들어감

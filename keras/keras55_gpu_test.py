@@ -10,6 +10,7 @@ width = 71
 num_classes = 100
 
 start = datetime.datetime.now()
+
 with tf.device('/gpu:0'):
     model = Xception(weights=None,
                      input_shape=(height, width, 3), classes=num_classes)
@@ -25,10 +26,12 @@ with tf.device('/gpu:0'):
 
 end = datetime.datetime.now()
 time_delta = end - start
+
 print('GPU 처리시간 : ', time_delta)
 
 
 start = datetime.datetime.now()
+
 with tf.device('/cpu:0'):
     model = Xception(weights=None,
                      input_shape=(height, width, 3), classes=num_classes)
@@ -44,4 +47,5 @@ with tf.device('/cpu:0'):
 
 end = datetime.datetime.now()
 time_delta = end - start
+
 print('CPU 처리시간 : ', time_delta)

@@ -25,12 +25,16 @@ print(x_train[0].shape)                                   # (28, 28)
 
 
 # 데이터 전처리 1. 원핫인코딩
+
 from keras.utils import np_utils
+
 y_train = np_utils.to_categorical(y_train)
 y_test = np_utils.to_categorical(y_test)
+
 print(y_train.shape)                                      #  (60000, 10)
 
-# 데이터 전처리 2. 정규화                                            
+# 데이터 전처리 2. 정규화  
+#                                           
 x_train = x_train.reshape(60000, 28, 28, 1).astype('float32') /255  
 x_test = x_test.reshape(10000, 28, 28, 1).astype('float32') /255   # 뒤에 ' . '을 써도 된다.                                  
 #             cnn 사용을 위한 4차원       # 타입 변환       # (x - min) / (max - min) : max =255, min = 0                                      
@@ -49,11 +53,15 @@ from keras.layers import Dense, Flatten, Dropout
 
  # 이미지를 가로, 세로 2, 2로 자르겠다.  
 input1 = Input(shape=(28,28,1))
+
 coni_1 = Conv2D(50, (2, 2))(input1)                            
 coni_2 = Conv2D(50, (3, 3))(coni_1)   
 drop = Dropout(0.2)(coni_2)
-coni_3 = Conv2D(350, (2, 2), padding = 'same')(drop)                                             
-flatten = Flatten()(coni_3)                                                   
+
+coni_3 = Conv2D(350, (2, 2), padding = 'same')(drop) 
+
+flatten = Flatten()(coni_3)       
+
 coni_4 = Dense(10, activation='softmax')(flatten)                            
 
 model = Model(inputs=input1, outputs = coni_4)
@@ -77,6 +85,7 @@ model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc']
 #  loss = 'categorical_crossentropy' : 다중분류에서 사용 
 
 from keras.callbacks import EarlyStopping
+
 early_stopping = EarlyStopping(monitor='loss', patience=5, mode='auto')
 
 model.fit(x_train, y_train, 

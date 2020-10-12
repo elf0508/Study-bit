@@ -23,12 +23,16 @@ print(y_test.shape)   # (10000, 1)
 print(x_train[0].shape)  # (32, 32, 3)
 
 # 데이터 전처리 1. 원핫인코딩
+
 from keras.utils import np_utils
+
 y_train = np_utils.to_categorical(y_train)
 y_test = np_utils.to_categorical(y_test)
+
 print(y_train.shape)          # (50000, 10)
 
-# 데이터 전처리 2. 정규화                                            
+# 데이터 전처리 2. 정규화      
+#                                       
 x_train = x_train.reshape(50000, 32*32, 3).astype('float32') /255  
 x_test = x_test.reshape(10000, 32*32, 3).astype('float32') /255                                     
 
@@ -40,7 +44,9 @@ print(x_test.shape)
 # 모델 구성
 
 model = Sequential() 
-model.add(LSTM(30, activation='relu', input_shape = (32*32, 3)))                        
+
+model.add(LSTM(30, activation='relu', input_shape = (32*32, 3)))         
+
 model.add(Dense(50))
 
 model.add(Dropout(0.2))
@@ -59,7 +65,9 @@ model.summary()
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc'])
 #  loss = 'categorical_crossentropy' : 다중분류에서 사용 
 
+
 from keras.callbacks import EarlyStopping
+
 early_stopping = EarlyStopping(monitor='loss', patience=5, mode='auto')
 
 model.fit(x_train, y_train, 

@@ -14,6 +14,7 @@ print('y_train[0] : ', y_train[0])
 
 print(x_train.shape)  # (50000, 32, 32, 3)
 print(x_test.shape)   # (10000, 32, 32, 3)
+
 print(y_train.shape)  # (50000, 1)
 print(y_test.shape)   # (10000, 1)
 

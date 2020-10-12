@@ -8,6 +8,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from sklearn.decomposition import PCA
 from keras.callbacks import EarlyStopping
+
 es = EarlyStopping(monitor = 'val_loss', mode = 'min', patience = 10)
 
 train = pd.read_csv('./dacon/comp1/train.csv', header=0, index_col=0)
@@ -23,6 +24,7 @@ print(train.isnull().sum())
 
 train = train.interpolate()  # 보간법- 선형보간
 print(train.isnull().sum())
+
 test = test.interpolate()  
 print(test.isnull().sum())
 
@@ -30,6 +32,7 @@ print(test.isnull().sum())
 
 train = train.fillna(method='bfill') 
 test = test.fillna(method='bfill') 
+
 print(test.isnull().sum())
 print("=" * 40)
 print(train.isnull().sum())
@@ -37,6 +40,7 @@ print(test.isnull().sum())
 
 x = train.iloc[:, :71]
 y = train.iloc[:, 71:]
+
 print(x.shape)          # (10000, 71)
 print(y.shape)          # (10000, 4)
 
@@ -48,6 +52,7 @@ np.save('./dacon/y_data', arr = y)
 # numpy 데이터 로드
 x = np.load('./dacon/x_data.npy')
 y = np.load('./dacon/y_data.npy')
+
 print(x.shape)          # (10000, 71)
 print(y.shape)          # (10000, 4)
 
