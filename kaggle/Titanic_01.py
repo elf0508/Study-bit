@@ -42,8 +42,8 @@ from sklearn.ensemble import RandomForestRegressor
 # 이미지 트레이닝 및 테스트 경로 설정
 
 DATASET = '../input/osic-pulmonary-fibrosis-progression'
-TEST_DIR = 'test.csv'
-TRAIN_CSV_PATH = 'train.csv'
+TEST_DIR = 'kaggle/OSIC_폐 섬유증 진행/test.csv'
+TRAIN_CSV_PATH = 'kaggle/OSIC_폐 섬유증 진행/train.csv'
 
 # 테스트 이미지 목록 가져오기
 
@@ -52,8 +52,8 @@ test_fns = glob(TEST_DIR + '*')
 
 # 데이터 가져오기
 
-train = pd.read_csv('train.csv')
-test = pd.read_csv('test.csv')
+train = pd.read_csv('kaggle/OSIC_폐 섬유증 진행/train.csv')
+test = pd.read_csv('kaggle/OSIC_폐 섬유증 진행/test.csv')
 
 # Display of training data
 # print(train)
@@ -78,7 +78,7 @@ test = pd.read_csv('test.csv')
 '''
 
 #Loading Sample Files for Submission
-sample = pd.read_csv('sample_submission.csv')
+sample = pd.read_csv('kaggle/OSIC_폐 섬유증 진행/sample_submission.csv')
 
 # Confirmation of the format of samples for submission
 # print(sample.head(3))
@@ -93,7 +93,7 @@ sample = pd.read_csv('sample_submission.csv')
 '''
 
 #Loading Sample Files for Submission
-sample = pd.read_csv('sample_submission.csv')
+sample = pd.read_csv('kaggle\OSIC_폐 섬유증 진행\sample_submission.csv')
 
 # 교육 데이터의 흡연 상태
 # print(train['SmokingStatus'].drop_duplicates())
@@ -280,3 +280,159 @@ df_smk.corr()['Age']['FVC']
 # 흡연자, 나이별 산점도 및 FVC
 sns.scatterplot(data=df_smk, x='Age', y='FVC')
 plt.show()
+
+# 나이와 FVC 간의 상관 관계 
+sns.scatterplot(data=train, x='Percent', y='FVC')
+plt.show()
+
+# 흡연자에게 초점을 맞출 때 나이와 fvc 사이에는 아무런 상관관계가 없어 보인다.
+
+# 나이별로 집계된 FVC에 대한 요약 통계 계산
+df.groupby('Age').describe()['FVC']
+# print(df.groupby)
+
+# 환자 ID별로 집계된 FVC에 대한 요약 통계량
+df.groupby('Patient').describe(percentiles=[0.1,0.2,0.5,0.8])['FVC']
+# print(df.groupby('Patient'))
+
+# 상관 관계 개요
+
+df_corr = df.corr()
+print(df_corr)
+
+# 상관관계 열 지도 
+
+corr_mat = df.corr(method='pearson')
+
+sns.heatmap(corr_mat,
+            vmin=-1.0,
+            vmax=1.0,
+            center=0,
+            annot=True, # True : 그리드에 값 표시
+            fmt='.1f',
+            xticklabels=corr_mat.columns.values,
+            yticklabels=corr_mat.columns.values
+           )
+
+plt.show()
+
+# 성별에 대한 파이 차트
+
+plt.pie(train["Sex"].value_counts(),labels=["Male","Female"],autopct="%.1f%%")
+plt.title("Ratio of Sex")
+
+# plt.show()
+
+# 출력 결과를 보아 압도적으로 남성임을 알수있다.
+
+# 흡연 상태에 대한 파이 차트
+
+plt.pie(train["SmokingStatus"].value_counts(),labels=["Ex-smoker","Never smoked","Currently smokes"],autopct="%.1f%%")
+plt.title("SmokingStatus")
+
+plt.show()
+
+# 출력 결과를 보아 현재 흡연하는 사람들이 훨씬 더 적다는 것을 알 수 있다.
+
+# 전체적인 자료를 보는 것에서 벗어나 최악의 증상을 보이는 환자들을 집중적으로 찾아보자.
+# 영상 데이터의 상위 10%와 하위 10%를 표시
+
+print(train[train.FVC < 1651])
+
+# Image loading
+# im_bad1 = Image.open("../input/osic-pulmonary-jpg/processed_images/train/ID00023637202179104603099/3.dcm")
+# im_bad2 = Image.open("../input/osic-pulmonary-jpg/processed_images/train/ID00023637202179104603099/5.dcm")
+# im_bad3 = Image.open("../input/osic-pulmonary-jpg/processed_images/train/ID00023637202179104603099/7.dcm")
+# im_bad4 = Image.open("../input/osic-pulmonary-jpg/processed_images/train/ID00023637202179104603099/15.dcm")
+
+# # 이미지를 배열로 변환
+# im_list1 = np.asarray(im_bad1)
+# im_list2 = np.asarray(im_bad2)
+# im_list3 = np.asarray(im_bad3)
+# im_list4 = np.asarray(im_bad4)
+
+
+# plt.imshow(im_list1)
+# plt.title("71, Female")
+# plt.show()
+
+# plt.imshow(im_list2)
+# plt.title("71, Female")
+# plt.show()
+
+# plt.imshow(im_list3)
+# plt.title("71, Female")
+# plt.show()
+
+# plt.imshow(im_list4)
+
+# # View image
+# plt.title("71, Female")
+# plt.show()
+
+# print(train[train.FVC > 3874])
+
+# training data
+train_x = train.drop(['FVC'], axis=1)
+train_y = df['FVC']
+
+# 현재값 확인
+# print(train_x)
+
+train_x['Patient_Week'] = train_x['Patient'].astype(str)+"_"+train_x['Weeks'].astype(str)
+# print(train_x.head(5))
+
+# 범주 변수를 임의 값으로 변환
+train_x['Sex'] = train_x['Sex'].map({'Male': 0, 'Female': 1})
+train_x['SmokingStatus'] = train_x['SmokingStatus'].map({'Never smoked': 0, 'Ex-smoker': 1, 'Currently smokes': 2})
+
+# 환자 ID 및  Week columns
+train_x_patient_weeklist = train_x['Patient_Week'] = train_x['Patient'].astype(str)+"_"+train_x['Weeks'].astype(str)
+train_x2 = train_x.drop('Patient', axis=1)
+train_x3 = train_x.drop('Weeks', axis=1)
+train_x4 = train_x.reindex(columns=['Patient_Week', 'FVC', 'Percent', 'Age', 'Sex', 'SmokingStatus'])
+
+print(train_x4.head(7))
+
+# 변환된 값 확인
+print(train_x4)
+
+# 시험 데이터는 특징만 있으니 그냥 복사
+test_x = test.copy()
+
+osic_features = ['Percent', 'Age', 'Sex', 'SmokingStatus']
+
+X = train_x4[osic_features]
+
+# 모델
+
+osic_model = DecisionTreeRegressor(random_state=1)
+
+# Fit model
+
+osic_model.fit(X, train_y)
+
+print(X.head())
+print("The predictions are")
+print(osic_model.predict(X.head()))
+
+# 교육 데이터의 FVC
+
+plt.figure(figsize=(18,6))
+plt.plot(train_x4["FVC"], label = "Train_Data")
+plt.legend()
+# plt.show()
+
+# FVC 예측 시각화
+plt.figure(figsize=(18,6))
+
+Y_train_Graph = pd.DataFrame(X)
+plt.plot(Y_train_Graph, label = "Predict")
+plt.legend()
+plt.show()
+
+#  submission file
+
+submission = pd.DataFrame(columns = ["Patient_Week", "FVC", "Confidence"])
+
+submission.to_csv('submission.csv', index=False)
