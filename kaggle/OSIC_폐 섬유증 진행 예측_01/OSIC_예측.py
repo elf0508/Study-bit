@@ -3,15 +3,17 @@ import numpy as np
 import pandas as pd
 import os
 
-from glob import glob
+from glob import glob     #  특정 파일 리스트 가져오기
 from PIL import Image
 import cv2
 
+ #  데이터 시각화 모듈 
+
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
-import seaborn as sns
+import seaborn as sns    
 
-from bokeh.plotting import figure
+from bokeh.plotting import figure  
 from bokeh.io import output_notebook, show, output_file
 from bokeh.models import ColumnDataSource, HoverTool, Panel
 from bokeh.models.widgets import Tabs
@@ -20,7 +22,10 @@ import albumentations as albu
 
 import math
 
-import pandas_profiling
+ # 데이터의 성격을 파악하는 과정 :  EDA(Exploratory Data Analysis, 탐색적 데이터 분석)
+ # 단 한 줄의 명령으로 탐색하는 패키지인 판다스 프로파일링(pandas-profiling)
+import pandas_profiling   
+
 import xgboost as xgb
 from sklearn.metrics import log_loss
 from sklearn.preprocessing import LabelEncoder
@@ -49,6 +54,8 @@ train = pd.read_csv('kaggle/OSIC_폐 섬유증 진행/train.csv')
 test = pd.read_csv('kaggle/OSIC_폐 섬유증 진행/test.csv')
 
 # print(train)
+
+#                 FVC : 노력성 폐활량 / 최대로 숨을 들이쉰 다음, 최대 노력으로 끝까지 내쉬었을 때 공기량
 
 '''
              Patient               Weeks  FVC   Percent  Age        Sex SmokingStatus

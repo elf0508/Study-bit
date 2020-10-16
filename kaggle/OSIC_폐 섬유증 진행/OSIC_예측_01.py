@@ -228,9 +228,10 @@ test4 = test.reindex(columns=['Patient_Week', 'FVC', 'Percent', 'Age', 'Sex', 'S
 # 고유한 환자 ID 수
 
 n = train['Patient'].nunique()
+
 # print(n)        # 176
 
-# 그래프
+# 그래프  
 
 k = 1 + math.log2(n)
 
@@ -239,6 +240,7 @@ k = 1 + math.log2(n)
 sns.distplot(train['FVC'], kde=True, rug=False, bins=int(k)) 
 
 # 그래프 제목
+
 plt.title('FVC')
 
 plt.show()
